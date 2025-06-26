@@ -1,0 +1,48 @@
+version: "3"
+services:
+  # MySQLの設定
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD} # 環境変数（.env）から参照
+      MYSQL_DATABASE: ${MYSQL_DB} # 環境変数（.env）から参照
+      MYSQL_USER: ${MYSQL_USER} # 環境変数（.env）から参照
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD} # 環境変数（.env）から参照
+      TZ: "Asia/Tokyo"
+    volumes:
+      # db-dataというボリュームをコンテナ内の/var/lib/mysqlにマウントする
+      - db-data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  # バックエンド（Rails）の設定
+  backend:
+    build:
+      context: ./backend/
+      dockerfile: Dockerfile.prod
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      # カレントディレクトリの内容をコンテナ内の/appにマウントする
+      - ./backend:/app
+    env_file:
+      - .env.prod
+    ports:
+      - ${RAILS_PORT}:3000 # 環境変数（.env）から参照
+    # コンテナを起動したままにする
+    tty: true
+    # 標準入出力とエラー出力をコンテナに結び付ける設定
+    stdin_open: true
+
+  # フロントエンド（Next.js）の設定
+  frontend:
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    command: "yarn dev"
+    volumes:
+      # ./frontend/appの内容をコンテナ内の/usr/src/appにマウントする
+      - ./frontend/app:/usr/src/app
+    ports:
+      - ${NEXTJS_PORT}:3000 # 環境変数（.env）から参照
+volumes:
+  db-data:

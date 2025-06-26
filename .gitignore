@@ -1,0 +1,76 @@
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment files
+.env*
+!.env.example
+
+# Logs
+*.log
+logs/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Dependency directories
+node_modules/
+vendor/bundle/
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# Ruby/Rails specific
+/.bundle
+/vendor/bundle
+/log/*
+/tmp/*
+!/log/.keep
+!/tmp/.keep
+/tmp/pids/*
+!/tmp/pids/
+!/tmp/pids/.keep
+/storage/*
+!/storage/.keep
+.byebug_history
+/config/master.key
+/config/credentials.yml.enc
+
+# Next.js specific
+.next/
+out/
+.vercel
+*.tsbuildinfo
+
+# Compiled binary addons
+build/Release
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# Misc
+*.pem
+*.key
+*.crt
