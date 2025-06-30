@@ -25,7 +25,7 @@ services:
       # カレントディレクトリの内容をコンテナ内の/appにマウントする
       - ./backend:/app
     env_file:
-      - .env.dev
+      - .env
     ports:
       - ${RAILS_PORT}:3000 # 環境変数（.env）から参照
     # コンテナを起動したままにする
