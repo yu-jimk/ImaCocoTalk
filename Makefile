@@ -123,8 +123,20 @@ frontend:
 	docker-compose -f $(DC_FILE) exec frontend sh
 
 # 任意のYarnコマンドを実行
-yarn-cmd:
+yarn:
 	docker-compose -f $(DC_FILE) exec frontend yarn $(filter-out $@,$(MAKECMDGOALS))
+
+# 任意のNpxコマンドを実行
+npx:
+	docker-compose -f $(DC_FILE) exec frontend npx $(filter-out $@,$(MAKECMDGOALS))
+
+# Npxコマンドを実行
+npx-shadcn-add:
+	docker-compose -f $(DC_FILE) exec frontend npx shadcn@latest add $(word 2, $(MAKECMDGOALS))
+
+# 余分なターゲット（たとえば input や button）でエラーが出ないようにする
+%:
+	@:
 
 ############################################
 # 📘 ヘルプ
