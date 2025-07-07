@@ -8,7 +8,6 @@ import {
   Settings,
 } from "lucide-react";
 import { QRCode } from "@/components/qr-code";
-import React from "react";
 
 export type StoreInfo = {
   name: string;

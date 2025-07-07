@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Trash2, Eye } from "lucide-react";
 import { StarRating } from "@/components/star-rating";
-import React, { useState } from "react";
+import { useState } from "react";
 
 type ReportedPost = {
   id: number;
