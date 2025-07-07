@@ -1,11 +1,7 @@
-"use client";
-
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { QrCodeDialog } from "@/components/QrCodeDialog";
 import { DashboardOverview } from "./components/DashboardOverview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReportsTab } from "./components/ReportsTab";
@@ -103,8 +99,6 @@ const pinnedPosts = [
 ];
 
 export default function ModeratorPage() {
-  const [qrDialogOpen, setQrDialogOpen] = useState(false);
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -131,10 +125,7 @@ export default function ModeratorPage() {
 
       <div className="p-4">
         {/* 概要（統計＋QR） */}
-        <DashboardOverview
-          storeInfo={storeInfo}
-          onQrClick={() => setQrDialogOpen(true)}
-        />
+        <DashboardOverview storeInfo={storeInfo} />
         {/* タブ */}
         <Tabs defaultValue="reports" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4 bg-white">
@@ -177,13 +168,6 @@ export default function ModeratorPage() {
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* Logout Confirmation Dialog */}
-      <QrCodeDialog
-        open={qrDialogOpen}
-        onOpenChange={setQrDialogOpen}
-        value={storeInfo.qrCodeValue}
-      />
     </div>
   );
 }
