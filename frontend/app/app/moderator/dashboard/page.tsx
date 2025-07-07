@@ -4,24 +4,15 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { LogOut, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { QrCodeDialog } from "@/components/QrCodeDialog";
 import { DashboardOverview } from "./components/DashboardOverview";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReportsTab } from "./components/ReportsTab";
 import { PostsTab } from "./components/PostsTab";
 import { PinnedTab } from "./components/PinnedTab";
 import { SettingsTab } from "./components/SettingsTab";
+import { LogoutDialog } from "@/components/LogoutDialog";
 
 // Mock data for moderator
 const storeInfo = {
@@ -112,15 +103,7 @@ const pinnedPosts = [
 ];
 
 export default function ModeratorPage() {
-  const router = useRouter();
-  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
-
-  const handleLogout = () => setLogoutDialogOpen(true);
-  const confirmLogout = () => {
-    console.log("Logout");
-    router.push("/moderator/login");
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -141,9 +124,7 @@ export default function ModeratorPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-orange-500 text-white">店舗運営者</Badge>
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
-              <LogOut className="h-5 w-5" />
-            </Button>
+            <LogoutDialog redirectUrl="/moderator/login" />
           </div>
         </div>
       </div>
@@ -203,25 +184,6 @@ export default function ModeratorPage() {
         onOpenChange={setQrDialogOpen}
         value={storeInfo.qrCodeValue}
       />
-      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>ログアウトしますか？</DialogTitle>
-            <DialogDescription>
-              ログアウトすると、再度ログインが必要になります。
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setLogoutDialogOpen(false)}
-            >
-              キャンセル
-            </Button>
-            <Button onClick={confirmLogout}>ログアウト</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

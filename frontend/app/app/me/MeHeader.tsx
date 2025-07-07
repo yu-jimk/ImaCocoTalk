@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Settings } from "lucide-react";
-import { LogoutDialog } from "./LogoutDialog";
+import { LogoutDialog } from "@/components/LogoutDialog";
 
 export function MeHeader() {
   return (

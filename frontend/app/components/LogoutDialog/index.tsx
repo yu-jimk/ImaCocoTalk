@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import {
@@ -14,17 +13,24 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-export function LogoutDialog() {
+export function LogoutDialog({
+  redirectUrl = "/auth/login",
+}: {
+  redirectUrl?: string;
+}) {
   const router = useRouter();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+
   const handleLogout = () => {
     setLogoutDialogOpen(true);
   };
+
   const confirmLogout = () => {
     // ログアウト処理
     console.log("Logout");
-    router.push("/login");
+    router.push(redirectUrl);
   };
+
   return (
     <>
       <Button variant="ghost" size="icon" onClick={handleLogout}>
