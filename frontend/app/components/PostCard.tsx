@@ -13,7 +13,7 @@ import {
   Edit,
   Trash2,
 } from "lucide-react";
-import { StarRating } from "@/components/star-rating";
+import { StarRating } from "@/components/StarRating";
 import {
   DropdownMenu,
   DropdownMenuContent,

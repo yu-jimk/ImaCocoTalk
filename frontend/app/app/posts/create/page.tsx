@@ -15,7 +15,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Form from "next/form";
-import { StarRating } from "@/components/star-rating";
+import { StarRating } from "@/components/StarRating";
 import { createPostAction } from "./actions";
 
 export default function CreatePostPage() {

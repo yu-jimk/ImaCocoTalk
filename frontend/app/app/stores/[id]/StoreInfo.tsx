@@ -1,7 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
-import { StarRating } from "@/components/star-rating";
+import { StarRating } from "@/components/StarRating";
 import { MapPin, Heart, Clock, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
