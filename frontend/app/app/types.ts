@@ -26,3 +26,12 @@ export type Post = {
     name: string;
   };
 };
+
+export type StoreMyPage = {
+  id: number;
+  name: string;
+  genre: string;
+  date?: string;
+  visits?: number;
+  isFavorite?: boolean;
+};

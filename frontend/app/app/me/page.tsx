@@ -93,6 +93,64 @@ const likedPosts = [
   },
 ];
 
+const favoriteStores = [
+  {
+    id: 1,
+    name: "カフェ・ド・パリ",
+    genre: "カフェ",
+    visits: 5,
+    isFavorite: true,
+  },
+  {
+    id: 2,
+    name: "らーめん太郎",
+    genre: "ラーメン",
+    visits: 3,
+    isFavorite: true,
+  },
+  {
+    id: 3,
+    name: "バー・ムーンライト",
+    genre: "バー",
+    visits: 2,
+    isFavorite: true,
+  },
+  {
+    id: 4,
+    name: "イタリアン・ベラ",
+    genre: "イタリアン",
+    visits: 4,
+    isFavorite: true,
+  },
+];
+
+const checkinHistory = [
+  {
+    id: 1,
+    name: "カフェ・ド・パリ",
+    genre: "カフェ",
+    date: "2024/01/15 14:30",
+  },
+  {
+    id: 2,
+    name: "らーめん太郎",
+    genre: "ラーメン",
+    date: "2024/01/14 12:15",
+  },
+  {
+    id: 3,
+    name: "バー・ムーンライト",
+    genre: "バー",
+    date: "2024/01/13 19:45",
+  },
+  {
+    id: 4,
+    name: "イタリアン・ベラ",
+    genre: "イタリアン",
+    date: "2024/01/12 18:30",
+  },
+];
+
 export default function MePage() {
   return (
     <div className="min-h-screen bg-gray-50">
@@ -162,10 +220,10 @@ export default function MePage() {
           <PostsTab posts={posts} />
 
           {/* チェックイン履歴タブ */}
-          <CheckinsTab />
+          <CheckinsTab stores={checkinHistory} />
 
           {/* お気に入りタブ（削除機能付き） */}
-          <FavoritesTab />
+          <FavoritesTab stores={favoriteStores} />
 
           {/* いいねした投稿タブ */}
           <LikedTab posts={likedPosts} />
