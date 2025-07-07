@@ -71,9 +71,13 @@ const allPosts = [
       "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
     timestamp: "1日前",
     likes: 12,
+    isLiked: false,
     comments: 3,
     status: "approved",
     rating: 4.5,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
   {
     id: 4,
@@ -81,9 +85,13 @@ const allPosts = [
     content: "パンケーキが絶品でした🥞 また来たいと思います！",
     timestamp: "2日前",
     likes: 8,
+    isLiked: false,
     comments: 1,
     status: "approved",
     rating: 4.0,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
 ];
 
@@ -178,7 +186,7 @@ export default function ModeratorPage() {
             <ReportsTab reportedPosts={reportedPosts} />
           </TabsContent>
           <TabsContent value="posts" className="space-y-4">
-            <PostsTab allPosts={allPosts} />
+            <PostsTab posts={allPosts} />
           </TabsContent>
           <TabsContent value="pinned" className="space-y-4">
             <PinnedTab pinnedPosts={pinnedPosts} />

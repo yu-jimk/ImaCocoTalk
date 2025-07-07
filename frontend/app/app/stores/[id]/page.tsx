@@ -30,7 +30,10 @@ const allPosts: Post[] = [
     likes: 12,
     comments: 3,
     isLiked: false,
-    rating: 4.5, // 0.5単位
+    rating: 4.5,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
   {
     id: 2,
@@ -41,6 +44,9 @@ const allPosts: Post[] = [
     comments: 1,
     isLiked: true,
     rating: 4.0,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
   {
     id: 3,
@@ -51,6 +57,9 @@ const allPosts: Post[] = [
     comments: 5,
     isLiked: false,
     rating: 3.5,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
   {
     id: 4,
@@ -61,6 +70,9 @@ const allPosts: Post[] = [
     comments: 2,
     isLiked: false,
     rating: 5.0,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
   {
     id: 5,
@@ -71,6 +83,9 @@ const allPosts: Post[] = [
     comments: 1,
     isLiked: false,
     rating: 4.0,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
 ];
 

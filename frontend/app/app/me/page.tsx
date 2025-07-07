@@ -19,6 +19,79 @@ const userData = {
   favoriteStores: 8,
   likedPostsCount: 24,
 };
+const posts = [
+  {
+    id: 1,
+    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    content:
+      "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
+    timestamp: "2時間前",
+    likes: 12,
+    comments: 3,
+    isLiked: false,
+    rating: 4.5,
+    store: { name: "カフェ・ド・パリ" },
+  },
+  {
+    id: 2,
+    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    store: { name: "らーめん太郎" },
+    content: "醤油ラーメンが絶品でした。スープが濃厚で麺との相性も抜群です。",
+    timestamp: "1日前",
+    likes: 8,
+    isLiked: false,
+    comments: 1,
+    rating: 4.0,
+  },
+  {
+    id: 3,
+    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    store: { name: "イタリアン・ベラ" },
+    content: "パスタが本格的で美味しかったです。また来たいと思います。",
+    timestamp: "3日前",
+    likes: 15,
+    isLiked: false,
+    comments: 4,
+    rating: 5.0,
+  },
+];
+
+const likedPosts = [
+  {
+    id: 101,
+    user: { name: "佐藤花子", avatar: "/placeholder-user.jpg" },
+    store: { name: "スターバックス渋谷店" },
+    content: "新作のフラペチーノが美味しかったです！季節限定なのでお早めに。",
+    timestamp: "1時間前",
+    likes: 25,
+    comments: 8,
+    rating: 4.0,
+    isLiked: true,
+  },
+  {
+    id: 102,
+    user: { name: "山田次郎", avatar: "/placeholder-user.jpg" },
+    store: { name: "焼肉キング" },
+    content: "お肉が柔らかくて最高でした。コスパも良くておすすめです。",
+    timestamp: "2日前",
+    likes: 18,
+    comments: 5,
+    rating: 4.5,
+    isLiked: true,
+  },
+  {
+    id: 103,
+    user: { name: "鈴木美咲", avatar: "/placeholder-user.jpg" },
+    store: { name: "和食処 さくら" },
+    content:
+      "お刺身が新鮮で美味しかったです。雰囲気も落ち着いていて良かったです。",
+    timestamp: "4日前",
+    likes: 12,
+    comments: 3,
+    rating: 4.5,
+    isLiked: true,
+  },
+];
 
 export default function MePage() {
   return (
@@ -86,7 +159,7 @@ export default function MePage() {
           </TabsList>
 
           {/* 投稿タブ（編集・削除機能付き） */}
-          <PostsTab />
+          <PostsTab posts={posts} />
 
           {/* チェックイン履歴タブ */}
           <CheckinsTab />
@@ -95,7 +168,7 @@ export default function MePage() {
           <FavoritesTab />
 
           {/* いいねした投稿タブ */}
-          <LikedTab />
+          <LikedTab posts={likedPosts} />
         </Tabs>
       </div>
     </div>
