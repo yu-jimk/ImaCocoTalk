@@ -22,4 +22,7 @@ export type Post = {
   comments: number;
   isLiked: boolean;
   rating: number;
+  store: {
+    name: string;
+  };
 };
