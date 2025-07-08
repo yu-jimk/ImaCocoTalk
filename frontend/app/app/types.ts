@@ -6,11 +6,13 @@ export type StoreData = {
   postalCode: string;
   distance: string;
   rating: number;
-  isCheckedIn: boolean;
   description: string;
   openHours: string;
   phone: string;
   features: string[];
+  user: {
+    isFavorited: boolean;
+  };
 };
 
 export type Post = {

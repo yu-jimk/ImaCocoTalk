@@ -1,15 +1,12 @@
-"use client";
-
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { StarRating } from "@/components/StarRating";
-import { MapPin, Heart, Clock, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { CheckinButton } from "./CheckinButton";
+import { MapPin, Clock, Phone, QrCode } from "lucide-react";
 import type { StoreData } from "@/app/types";
+import { FavoriteButton } from "./FavoriteButton";
 
 export function StoreInfo({ storeData }: { storeData: StoreData }) {
-  const [isLiked, setIsLiked] = useState(false);
   return (
     <div className="bg-white p-4 border-b">
       <div className="flex justify-between items-start mb-3">
@@ -31,15 +28,10 @@ export function StoreInfo({ storeData }: { storeData: StoreData }) {
             </div>
           </div>
         </div>
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => setIsLiked(!isLiked)}
-        >
-          <Heart
-            className={`h-5 w-5 ${isLiked ? "fill-red-500 text-red-500" : ""}`}
-          />
-        </Button>
+        <FavoriteButton
+          storeId={storeData.id}
+          initialFavorited={storeData.user.isFavorited}
+        />
       </div>
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
         <MapPin className="h-4 w-4" />
@@ -79,7 +71,15 @@ export function StoreInfo({ storeData }: { storeData: StoreData }) {
           </div>
         </div>
       </div>
-      <CheckinButton isCheckedIn={storeData.isCheckedIn} />
+      <Link href="/checkin">
+        <Button
+          className="w-full mb-2 bg-blue-600 hover:bg-blue-700"
+          variant="default"
+        >
+          <QrCode className="h-4 w-4 mr-2" />
+          チェックインして投稿
+        </Button>
+      </Link>
     </div>
   );
 }

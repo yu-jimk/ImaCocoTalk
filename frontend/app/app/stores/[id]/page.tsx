@@ -1,6 +1,7 @@
-import { StoreHeader } from "./StoreHeader";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import Link from "next/link";
 import { StoreInfo } from "./StoreInfo";
-
 import { AllPosts } from "./AllPosts";
 import type { Post, StoreData } from "@/app/types";
 
@@ -12,12 +13,14 @@ const storeData: StoreData = {
   postalCode: "150-0041",
   distance: "50m",
   rating: 4.5,
-  isCheckedIn: false,
   description:
     "パリの雰囲気を楽しめる本格的なカフェです。厳選されたコーヒー豆を使用し、熟練のバリスタが一杯一杯丁寧に淹れています。WiFi完備で電源も利用可能なため、リモートワークにも最適です。落ち着いた店内では、ゆったりとした時間をお過ごしいただけます。",
   openHours: "8:00 - 22:00",
   phone: "03-1234-5678",
   features: ["WiFi完備", "電源あり", "禁煙", "テイクアウト可"],
+  user: {
+    isFavorited: false,
+  },
 };
 
 const allPosts: Post[] = [
@@ -92,7 +95,16 @@ const allPosts: Post[] = [
 export default function StoreDetailPage({}: { params: { id: number } }) {
   return (
     <div className="min-h-screen bg-blue-50">
-      <StoreHeader />
+      <header className="bg-white border-b border-blue-200 px-4 py-3">
+        <div className="flex items-center gap-3">
+          <Link href="/">
+            <Button variant="ghost" size="icon">
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+          </Link>
+          <h1 className="text-lg font-semibold">店舗詳細</h1>
+        </div>
+      </header>
       <StoreInfo storeData={storeData} />
       <AllPosts posts={allPosts} />
     </div>
