@@ -13,10 +13,12 @@ export function FavoriteButton({
 }) {
   const [isFavorited, setIsFavorited] = useState(initialFavorited);
   const isFavoritedRef = useRef(isFavorited);
+  const initialFavoritedRef = useRef(initialFavorited);
 
   useEffect(() => {
+    const initialValue = initialFavoritedRef.current;
     return () => {
-      if (isFavoritedRef.current !== initialFavorited) {
+      if (isFavoritedRef.current !== initialValue) {
         fetch("/api/stores/favorite", {
           method: "POST",
           body: JSON.stringify({
