@@ -1,7 +1,4 @@
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { DashboardOverview } from "./components/DashboardOverview";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReportsTab } from "./components/ReportsTab";
@@ -105,16 +102,9 @@ export default function ModeratorPage() {
       <div className="bg-white border-b px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-orange-600 hover:bg-orange-100"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <h1 className="text-lg font-semibold text-gray-800">管理画面</h1>
+            <h1 className="text-lg font-semibold text-gray-800">
+              モデレーター管理画面
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-orange-500 text-white">店舗運営者</Badge>
