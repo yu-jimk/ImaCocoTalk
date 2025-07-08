@@ -27,7 +27,7 @@ export function DashboardOverview({ storeInfo }: { storeInfo: StoreInfo }) {
     <>
       <div className="flex flex-col lg:flex-row gap-4 md:gap-6 mb-6 min-h-60">
         {/* 統計情報カード */}
-        <Card className="bg-white border-l-4 border-l-gray-400 py-4 md:py-6 flex-1 h-full">
+        <Card className="bg-white py-4 md:py-6 flex-1 h-full">
           <CardHeader>
             <CardTitle className="flex items-center gap-1 sm:gap-2 text-orange-700 text-base sm:text-xl md:text-2xl whitespace-nowrap truncate">
               <Settings className="h-5 w-5 min-w-5 min-h-5" />
