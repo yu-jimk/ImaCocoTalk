@@ -7,7 +7,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   MessageCircle,
   Clock,
-  ThumbsUp,
   MoreVertical,
   Flag,
   Edit,
@@ -24,12 +23,15 @@ import { Button } from "@/components/ui/button";
 import { ReportDialog } from "./ReportDialog/index";
 import { DeleteDialog } from "./DeleteDialog/index";
 import type { Post } from "@/app/types";
+import { LikeButton } from "./LikeButton";
 
 type PostCardProps = {
   post: Post;
   showEditMenu?: boolean;
   showDeleteMenu?: boolean;
   showReportMenu?: boolean;
+  likeButtonDisabled?: boolean;
+  contentLinkEnabled?: boolean;
 };
 
 export function PostCard({
@@ -37,6 +39,8 @@ export function PostCard({
   showEditMenu = false,
   showDeleteMenu = false,
   showReportMenu = false,
+  likeButtonDisabled = false,
+  contentLinkEnabled = true,
 }: PostCardProps) {
   const [isDeleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [isReportDialogOpen, setReportDialogOpen] = useState(false);
@@ -124,22 +128,26 @@ export function PostCard({
               </div>
 
               {/* Content（本文のみリンク） */}
-              <Link href={`/posts/${post.id}`} className="block mt-1">
-                <p className="text-sm sm:text-base text-gray-700 mb-3 break-words hover:text-blue-600 cursor-pointer">
+              {contentLinkEnabled ? (
+                <Link href={`/posts/${post.id}`} className="block mt-1">
+                  <p className="text-sm sm:text-base text-gray-700 mb-3 break-words hover:text-blue-600 cursor-pointer">
+                    {post.content}
+                  </p>
+                </Link>
+              ) : (
+                <p className="text-sm sm:text-base text-gray-700 mb-3 break-words mt-1 block">
                   {post.content}
                 </p>
-              </Link>
+              )}
 
               {/* Reactions */}
               <div className="flex items-center gap-4 text-xs sm:text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <ThumbsUp
-                    className={`h-3 w-3 sm:h-4 sm:w-4 ${
-                      post.isLiked && "fill-blue-500 text-blue-500"
-                    }`}
-                  />
-                  {post.likes}
-                </div>
+                <LikeButton
+                  postId={post.id}
+                  initialLiked={post.isLiked}
+                  initialCount={post.likes}
+                  disabled={likeButtonDisabled}
+                />
                 <div className="flex items-center gap-1">
                   <MessageCircle className="h-3 w-3 sm:h-4 sm:w-4" />0
                 </div>

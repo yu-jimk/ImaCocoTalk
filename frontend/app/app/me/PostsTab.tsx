@@ -12,6 +12,7 @@ export function PostsTab({ posts }: { posts: Post[] }) {
             post={post}
             showDeleteMenu={true}
             showEditMenu={true}
+            likeButtonDisabled={true}
           />
         ))}
       </TabsContent>

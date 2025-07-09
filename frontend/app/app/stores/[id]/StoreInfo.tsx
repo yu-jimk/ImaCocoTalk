@@ -4,7 +4,7 @@ import { StarRating } from "@/components/StarRating";
 import { Button } from "@/components/ui/button";
 import { MapPin, Clock, Phone, QrCode } from "lucide-react";
 import type { StoreData } from "@/app/types";
-import { FavoriteButton } from "./FavoriteButton";
+import { FavoriteButton } from "@/components/FavoriteButton";
 
 export function StoreInfo({ store }: { store: StoreData }) {
   return (
