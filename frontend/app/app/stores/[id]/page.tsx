@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
@@ -5,7 +6,7 @@ import { StoreInfo } from "./StoreInfo";
 import { AllPosts } from "./AllPosts";
 import type { Post, StoreData } from "@/app/types";
 
-const storeData: StoreData = {
+const store: StoreData = {
   id: 1,
   name: "カフェ・ド・パリ",
   genres: ["カフェ", "フレンチ", "デザート"],
@@ -23,7 +24,7 @@ const storeData: StoreData = {
   },
 };
 
-const allPosts: Post[] = [
+const posts: Post[] = [
   {
     id: 1,
     user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
@@ -92,7 +93,42 @@ const allPosts: Post[] = [
   },
 ];
 
-export default function StoreDetailPage({}: { params: { id: number } }) {
+const POSTS_PER_PAGE = 5;
+
+export default async function StoreDetailPage({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams: { page?: string };
+}) {
+  const storeId = params.id;
+  const page = parseInt(searchParams.page || "1", 10);
+  if (isNaN(page) || page < 1) return notFound();
+
+  //   const storeRes = await fetch(
+  //     `${process.env.NEXT_PUBLIC_API_URL}/stores/${storeId}`,
+  //     {
+  //       next: { revalidate: 3600 },
+  //     }
+  //   );
+  //   if (!storeRes.ok) return notFound();
+  //   const store: StoreData = await storeRes.json();
+
+  //   const postsRes = await fetch(
+  //     `${process.env.NEXT_PUBLIC_API_URL}/stores/${storeId}/posts?page=${page}&limit=${POSTS_PER_PAGE}`,
+  //     {
+  //       cache: "no-store",
+  //     }
+  //   );
+  //   if (!postsRes.ok) return notFound();
+  //   const { posts, totalCount }: { posts: Post[]; totalCount: number } =
+  //     await postsRes.json();
+
+  const totalCount = 10;
+
+  const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
+
   return (
     <div className="min-h-screen bg-blue-50">
       <header className="bg-white border-b border-blue-200 px-4 py-3">
@@ -105,8 +141,13 @@ export default function StoreDetailPage({}: { params: { id: number } }) {
           <h1 className="text-lg font-semibold">店舗詳細</h1>
         </div>
       </header>
-      <StoreInfo storeData={storeData} />
-      <AllPosts posts={allPosts} />
+      <StoreInfo store={store} />
+      <AllPosts
+        posts={posts}
+        currentPage={page}
+        totalPages={totalPages}
+        storeId={storeId}
+      />
     </div>
   );
 }

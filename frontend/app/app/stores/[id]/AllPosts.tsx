@@ -1,5 +1,3 @@
-"use client";
-import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -12,13 +10,21 @@ import { Badge } from "@/components/ui/badge";
 import type { Post } from "@/app/types";
 import { PostCard } from "@/components/PostCard";
 
-const POSTS_PER_PAGE = 3;
+export function AllPosts({
+  posts,
+  currentPage,
+  totalPages,
+  storeId,
+}: {
+  posts: Post[];
+  currentPage: number;
+  totalPages: number;
+  storeId: string;
+}) {
+  const pathname = `/stores/${storeId}`;
 
-export function AllPosts({ posts }: { posts: Post[] }) {
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(posts.length / POSTS_PER_PAGE);
-  const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
-  const currentPosts = posts.slice(startIndex, startIndex + POSTS_PER_PAGE);
+  const getPageHref = (page: number) =>
+    page === 1 ? pathname : `${pathname}?page=${page}`;
 
   return (
     <>
@@ -33,7 +39,7 @@ export function AllPosts({ posts }: { posts: Post[] }) {
         </div>
 
         <div className="space-y-2 sm:space-y-4 mb-6">
-          {currentPosts.map((post) => (
+          {posts.map((post) => (
             <PostCard key={post.id} post={post} showReportMenu={true} />
           ))}
         </div>
@@ -44,11 +50,7 @@ export function AllPosts({ posts }: { posts: Post[] }) {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage > 1) setCurrentPage(currentPage - 1);
-                  }}
+                  href={getPageHref(currentPage - 1)}
                   className={
                     currentPage === 1 ? "pointer-events-none opacity-50" : ""
                   }
@@ -59,11 +61,7 @@ export function AllPosts({ posts }: { posts: Post[] }) {
                 (page) => (
                   <PaginationItem key={page}>
                     <PaginationLink
-                      href="#"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        setCurrentPage(page);
-                      }}
+                      href={getPageHref(page)}
                       isActive={currentPage === page}
                     >
                       {page}
@@ -74,12 +72,7 @@ export function AllPosts({ posts }: { posts: Post[] }) {
 
               <PaginationItem>
                 <PaginationNext
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    if (currentPage < totalPages)
-                      setCurrentPage(currentPage + 1);
-                  }}
+                  href={getPageHref(currentPage + 1)}
                   className={
                     currentPage === totalPages
                       ? "pointer-events-none opacity-50"

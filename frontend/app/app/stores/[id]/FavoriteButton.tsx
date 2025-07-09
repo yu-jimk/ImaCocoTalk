@@ -1,39 +1,42 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import {
+  // useEffect, useRef,
+  useState,
+} from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
 
 export function FavoriteButton({
-  storeId,
+  //   storeId,
   initialFavorited,
 }: {
   storeId: number;
   initialFavorited: boolean;
 }) {
   const [isFavorited, setIsFavorited] = useState(initialFavorited);
-  const isFavoritedRef = useRef(isFavorited);
-  const initialFavoritedRef = useRef(initialFavorited);
+  //   const isFavoritedRef = useRef(isFavorited);
+  //   const initialFavoritedRef = useRef(initialFavorited);
 
-  useEffect(() => {
-    const initialValue = initialFavoritedRef.current;
-    return () => {
-      if (isFavoritedRef.current !== initialValue) {
-        fetch("/api/stores/favorite", {
-          method: "POST",
-          body: JSON.stringify({
-            storeId: storeId,
-            isFavorited: isFavoritedRef.current,
-          }),
-          headers: { "Content-Type": "application/json" },
-        });
-      }
-    };
-  }, [storeId]);
+  //   useEffect(() => {
+  //     const initialValue = initialFavoritedRef.current;
+  //     return () => {
+  //       if (isFavoritedRef.current !== initialValue) {
+  //         fetch("/api/stores/favorite", {
+  //           method: "POST",
+  //           body: JSON.stringify({
+  //             storeId: storeId,
+  //             isFavorited: isFavoritedRef.current,
+  //           }),
+  //           headers: { "Content-Type": "application/json" },
+  //         });
+  //       }
+  //     };
+  //   }, [storeId]);
 
-  useEffect(() => {
-    isFavoritedRef.current = isFavorited;
-  }, [isFavorited]);
+  //   useEffect(() => {
+  //     isFavoritedRef.current = isFavorited;
+  //   }, [isFavorited]);
 
   return (
     <Button

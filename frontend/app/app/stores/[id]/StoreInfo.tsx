@@ -6,14 +6,14 @@ import { MapPin, Clock, Phone, QrCode } from "lucide-react";
 import type { StoreData } from "@/app/types";
 import { FavoriteButton } from "./FavoriteButton";
 
-export function StoreInfo({ storeData }: { storeData: StoreData }) {
+export function StoreInfo({ store }: { store: StoreData }) {
   return (
     <div className="bg-white p-4 border-b">
       <div className="flex justify-between items-start mb-3">
         <div className="flex-1">
-          <h2 className="text-xl font-bold text-blue-900">{storeData.name}</h2>
+          <h2 className="text-xl font-bold text-blue-900">{store.name}</h2>
           <div className="flex items-center gap-2 mt-1 flex-wrap">
-            {storeData.genres.map((genre, index) => (
+            {store.genres.map((genre, index) => (
               <Badge
                 key={index}
                 variant="secondary"
@@ -23,43 +23,43 @@ export function StoreInfo({ storeData }: { storeData: StoreData }) {
               </Badge>
             ))}
             <div className="flex items-center gap-1 text-sm text-gray-600">
-              <StarRating value={storeData.rating} readOnly size="sm" />
-              <span>{storeData.rating}</span>
+              <StarRating value={store.rating} readOnly size="sm" />
+              <span>{store.rating}</span>
             </div>
           </div>
         </div>
         <FavoriteButton
-          storeId={storeData.id}
-          initialFavorited={storeData.user.isFavorited}
+          storeId={store.id}
+          initialFavorited={store.user.isFavorited}
         />
       </div>
       <div className="flex items-center gap-2 text-sm text-gray-600 mb-4">
         <MapPin className="h-4 w-4" />
         <span>
-          〒{storeData.postalCode} {storeData.address}
+          〒{store.postalCode} {store.address}
         </span>
         <span>•</span>
-        <span>{storeData.distance}</span>
+        <span>{store.distance}</span>
       </div>
       {/* Store Description */}
       <div className="bg-blue-50 p-4 rounded-lg mb-4">
         <h3 className="font-medium text-blue-800 mb-2">店舗について</h3>
         <p className="text-sm text-gray-700 leading-relaxed mb-3">
-          {storeData.description}
+          {store.description}
         </p>
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Clock className="h-4 w-4 text-blue-500" />
-            <span>営業時間: {storeData.openHours}</span>
+            <span>営業時間: {store.openHours}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <Phone className="h-4 w-4 text-blue-500" />
-            <span>電話: {storeData.phone}</span>
+            <span>電話: {store.phone}</span>
           </div>
         </div>
         <div className="mt-3">
           <div className="flex flex-wrap gap-2">
-            {storeData.features.map((feature, index) => (
+            {store.features.map((feature, index) => (
               <Badge
                 key={index}
                 variant="outline"
