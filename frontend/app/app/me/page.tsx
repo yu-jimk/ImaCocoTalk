@@ -11,7 +11,7 @@ import { LikedTab } from "./LikedTab";
 
 const userData = {
   name: "田中太郎",
-  avatar: "/placeholder-user.jpg",
+  avatar: "",
   bio: "カフェ巡りが趣味です。美味しいコーヒーを求めて日々探索中！新しいお店を見つけるのが楽しみで、特にこだわりのあるコーヒー豆を使っているお店が好きです。",
   joinDate: "2024年1月",
   totalPosts: 15,
@@ -22,7 +22,7 @@ const userData = {
 const posts = [
   {
     id: 1,
-    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "田中太郎", avatar: "" },
     content:
       "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
     timestamp: "2時間前",
@@ -34,7 +34,7 @@ const posts = [
   },
   {
     id: 2,
-    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "田中太郎", avatar: "" },
     store: { name: "らーめん太郎" },
     content: "醤油ラーメンが絶品でした。スープが濃厚で麺との相性も抜群です。",
     timestamp: "1日前",
@@ -45,7 +45,7 @@ const posts = [
   },
   {
     id: 3,
-    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "田中太郎", avatar: "" },
     store: { name: "イタリアン・ベラ" },
     content: "パスタが本格的で美味しかったです。また来たいと思います。",
     timestamp: "3日前",
@@ -59,7 +59,7 @@ const posts = [
 const likedPosts = [
   {
     id: 101,
-    user: { name: "佐藤花子", avatar: "/placeholder-user.jpg" },
+    user: { name: "佐藤花子", avatar: "" },
     store: { name: "スターバックス渋谷店" },
     content: "新作のフラペチーノが美味しかったです！季節限定なのでお早めに。",
     timestamp: "1時間前",
@@ -70,7 +70,7 @@ const likedPosts = [
   },
   {
     id: 102,
-    user: { name: "山田次郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "山田次郎", avatar: "" },
     store: { name: "焼肉キング" },
     content: "お肉が柔らかくて最高でした。コスパも良くておすすめです。",
     timestamp: "2日前",
@@ -81,7 +81,7 @@ const likedPosts = [
   },
   {
     id: 103,
-    user: { name: "鈴木美咲", avatar: "/placeholder-user.jpg" },
+    user: { name: "鈴木美咲", avatar: "" },
     store: { name: "和食処 さくら" },
     content:
       "お刺身が新鮮で美味しかったです。雰囲気も落ち着いていて良かったです。",
@@ -163,7 +163,7 @@ export default function MePage() {
           <CardContent className="p-6">
             <div className="flex items-start gap-4 mb-4">
               <Avatar className="w-16 h-16">
-                <AvatarImage src={userData.avatar || "/placeholder.svg"} />
+                <AvatarImage src={userData.avatar || ""} />
                 <AvatarFallback>{userData.name[0]}</AvatarFallback>
               </Avatar>
               <div className="flex-1">

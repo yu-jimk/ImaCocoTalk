@@ -16,7 +16,7 @@ export default function SettingsPage() {
     name: "田中太郎",
     email: "tanaka@example.com",
     bio: "カフェ巡りが趣味です。美味しいコーヒーを求めて日々探索中！",
-    avatar: "/placeholder-user.jpg",
+    avatar: "",
   });
 
   const [notifications, setNotifications] = useState({
@@ -62,7 +62,7 @@ export default function SettingsPage() {
           <CardContent className="space-y-4">
             <div className="flex items-center gap-4">
               <Avatar className="w-20 h-20">
-                <AvatarImage src={profile.avatar || "/placeholder.svg"} />
+                <AvatarImage src={profile.avatar || ""} />
                 <AvatarFallback>{profile.name[0]}</AvatarFallback>
               </Avatar>
               <Button variant="outline" size="sm">

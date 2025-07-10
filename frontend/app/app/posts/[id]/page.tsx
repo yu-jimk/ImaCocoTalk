@@ -12,7 +12,7 @@ import { PostCard } from "@/components/PostCard";
 // Mock data
 const post = {
   id: 1,
-  user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+  user: { name: "田中太郎", avatar: "" },
   content:
     "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。WiFiも快適で電源もあるので、ノマドワークにもおすすめです。",
   timestamp: "2時間前",
@@ -26,13 +26,13 @@ const post = {
 const comments = [
   {
     id: 1,
-    user: { name: "佐藤花子", avatar: "/placeholder-user.jpg" },
+    user: { name: "佐藤花子", avatar: "" },
     content: "私もここのコーヒー大好きです！",
     timestamp: "1時間前",
   },
   {
     id: 2,
-    user: { name: "山田次郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "山田次郎", avatar: "" },
     content: "WiFi情報ありがとうございます。今度利用してみます。",
     timestamp: "30分前",
   },
@@ -70,9 +70,7 @@ export default function PostDetailPage() {
               {comments.map((comment) => (
                 <div key={comment.id} className="flex items-start gap-3">
                   <Avatar className="w-8 h-8">
-                    <AvatarImage
-                      src={comment.user.avatar || "/placeholder.svg"}
-                    />
+                    <AvatarImage src={comment.user.avatar || ""} />
                     <AvatarFallback>{comment.user.name[0]}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1">

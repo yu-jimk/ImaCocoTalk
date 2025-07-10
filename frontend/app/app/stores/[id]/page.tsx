@@ -27,7 +27,7 @@ const store: StoreData = {
 const posts: Post[] = [
   {
     id: 1,
-    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "田中太郎", avatar: "" },
     content:
       "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
     timestamp: "2時間前",
@@ -41,7 +41,7 @@ const posts: Post[] = [
   },
   {
     id: 2,
-    user: { name: "佐藤花子", avatar: "/placeholder-user.jpg" },
+    user: { name: "佐藤花子", avatar: "" },
     content: "パンケーキが絶品でした🥞 また来たいと思います！",
     timestamp: "5時間前",
     likes: 8,
@@ -54,7 +54,7 @@ const posts: Post[] = [
   },
   {
     id: 3,
-    user: { name: "山田次郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "山田次郎", avatar: "" },
     content: "WiFiも快適で、電源もあるのでノマドワークにおすすめです。",
     timestamp: "1日前",
     likes: 15,
@@ -67,7 +67,7 @@ const posts: Post[] = [
   },
   {
     id: 4,
-    user: { name: "鈴木美咲", avatar: "/placeholder-user.jpg" },
+    user: { name: "鈴木美咲", avatar: "" },
     content: "店員さんがとても親切でした。コーヒーも美味しくて満足です。",
     timestamp: "2日前",
     likes: 6,
@@ -80,7 +80,7 @@ const posts: Post[] = [
   },
   {
     id: 5,
-    user: { name: "高橋健太", avatar: "/placeholder-user.jpg" },
+    user: { name: "高橋健太", avatar: "" },
     content: "落ち着いた雰囲気で読書にも最適です。",
     timestamp: "3日前",
     likes: 4,

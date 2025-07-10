@@ -54,7 +54,7 @@ export function ReportsTab({
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-start gap-3 sm:gap-4">
               <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
-                <AvatarImage src={post.user.avatar || "/placeholder.svg"} />
+                <AvatarImage src={post.user.avatar || ""} />
                 <AvatarFallback>{post.user.name[0]}</AvatarFallback>
               </Avatar>
               <div className="flex-1">

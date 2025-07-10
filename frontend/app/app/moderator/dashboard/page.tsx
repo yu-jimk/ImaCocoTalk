@@ -27,7 +27,7 @@ const storeInfo = {
 const reportedPosts = [
   {
     id: 1,
-    user: { name: "匿名ユーザー", avatar: "/placeholder-user.jpg" },
+    user: { name: "匿名ユーザー", avatar: "" },
     content: "この店のサービスは最悪でした。二度と行きません。",
     timestamp: "2時間前",
     reports: 3,
@@ -37,7 +37,7 @@ const reportedPosts = [
   },
   {
     id: 2,
-    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "田中太郎", avatar: "" },
     content: "スタッフの態度が悪い。改善してほしい。",
     timestamp: "5時間前",
     reports: 1,
@@ -50,7 +50,7 @@ const reportedPosts = [
 const allPosts = [
   {
     id: 3,
-    user: { name: "佐藤花子", avatar: "/placeholder-user.jpg" },
+    user: { name: "佐藤花子", avatar: "" },
     content:
       "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
     timestamp: "1日前",
@@ -65,7 +65,7 @@ const allPosts = [
   },
   {
     id: 4,
-    user: { name: "山田次郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "山田次郎", avatar: "" },
     content: "パンケーキが絶品でした🥞 また来たいと思います！",
     timestamp: "2日前",
     likes: 8,

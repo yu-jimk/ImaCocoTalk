@@ -51,10 +51,7 @@ export function PostCard({
           <div className="flex items-start gap-3 sm:gap-4">
             {/* Avatar */}
             <Avatar className="w-8 h-8 sm:w-10 sm:h-10">
-              <AvatarImage
-                src={post.user.avatar || "/placeholder.svg"}
-                alt={post.user.name}
-              />
+              <AvatarImage src={post.user.avatar || ""} alt={post.user.name} />
               <AvatarFallback>{post.user.name[0]}</AvatarFallback>
             </Avatar>
 
