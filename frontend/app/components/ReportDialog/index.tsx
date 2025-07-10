@@ -10,7 +10,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import { AlertTriangle } from "lucide-react";
 import Form from "next/form";
@@ -37,13 +37,11 @@ export function ReportDialog({
   isReportDialogOpen,
   setReportDialogOpen,
 }: ReportDialogProps) {
-  const [selectedReasons, setSelectedReasons] = useState<string[]>([]);
+  const [selectedReason, setSelectedReason] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleReasonChange = (reasonId: string, checked: boolean) => {
-    setSelectedReasons((prev) =>
-      checked ? [...prev, reasonId] : prev.filter((id) => id !== reasonId)
-    );
+  const handleReasonChange = (reasonId: string) => {
+    setSelectedReason(reasonId);
   };
 
   const handleClientSubmit = async (formData: FormData) => {
@@ -51,7 +49,7 @@ export function ReportDialog({
     try {
       await submitReport(formData);
       setReportDialogOpen(false);
-      setSelectedReasons([]);
+      setSelectedReason("");
       alert("通報を受け付けました。内容を確認いたします。");
     } catch (e) {
       alert(e);
@@ -77,19 +75,20 @@ export function ReportDialog({
           <Input type="hidden" name="postId" value={postId} />
 
           <Label className="text-sm font-medium text-gray-700 mb-3 block">
-            通報理由（複数選択可）
+            通報理由（1つ選択）
           </Label>
-          <div className="space-y-2">
+          <RadioGroup
+            name="reason"
+            value={selectedReason}
+            onValueChange={handleReasonChange}
+            className="space-y-2"
+          >
             {reportReasons.map((reason) => (
               <div key={reason.id} className="flex items-center space-x-2">
-                <Checkbox
+                <RadioGroupItem
                   id={reason.id}
-                  name="reasons"
                   value={reason.id}
-                  checked={selectedReasons.includes(reason.id)}
-                  onCheckedChange={(checked) =>
-                    handleReasonChange(reason.id, checked as boolean)
-                  }
+                  checked={selectedReason === reason.id}
                 />
                 <Label
                   htmlFor={reason.id}
@@ -99,7 +98,7 @@ export function ReportDialog({
                 </Label>
               </div>
             ))}
-          </div>
+          </RadioGroup>
 
           <DialogFooter>
             <Button
@@ -112,7 +111,7 @@ export function ReportDialog({
             </Button>
             <Button
               type="submit"
-              disabled={selectedReasons.length === 0 || isSubmitting}
+              disabled={!selectedReason || isSubmitting}
               className="bg-red-600 hover:bg-red-700"
             >
               {isSubmitting ? "送信中..." : "通報する"}
