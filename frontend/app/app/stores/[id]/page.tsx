@@ -99,11 +99,11 @@ export default async function StoreDetailPage({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams: { page?: string };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ page?: string }>;
 }) {
-  const storeId = params.id;
-  const page = parseInt(searchParams.page || "1", 10);
+  const storeId = (await params).id;
+  const page = parseInt((await searchParams).page || "1", 10);
   if (isNaN(page) || page < 1) return notFound();
 
   //   const storeRes = await fetch(
