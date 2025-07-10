@@ -44,7 +44,7 @@ export function ReportDialog({
     setSelectedReason(reasonId);
   };
 
-  const handleClientSubmit = async (formData: FormData) => {
+  const handleSubmit = async (formData: FormData) => {
     setIsSubmitting(true);
     try {
       await submitReport(formData);
@@ -71,7 +71,7 @@ export function ReportDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <Form action={handleClientSubmit} className="space-y-4">
+        <Form action={handleSubmit} className="space-y-4">
           <Input type="hidden" name="postId" value={postId} />
 
           <Label className="text-sm font-medium text-gray-700 mb-3 block">
