@@ -8,9 +8,11 @@ import Link from "next/link";
 import Form from "next/form";
 import { addCommentAction } from "./actions";
 import { PostCard } from "@/components/PostCard";
+// import { notFound } from "next/navigation";
+import { Post } from "@/app/types";
 
 // Mock data
-const post = {
+const post: Post = {
   id: 1,
   user: { name: "田中太郎", avatar: "" },
   content:
@@ -38,7 +40,20 @@ const comments = [
   },
 ];
 
-export default function PostDetailPage() {
+export default async function PostDetailPage({}: //   params,
+{
+  params: Promise<{ id: string }>;
+}) {
+  //   const postId = (await params).id;
+  //   const postRes = await fetch(
+  //     `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
+  //     {
+  //       next: { revalidate: 3600 },
+  //     }
+  //   );
+  //   if (!postRes.ok) return notFound();
+  //   const post1: Post = await postRes.json();
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
