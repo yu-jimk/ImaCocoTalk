@@ -1,3 +1,5 @@
+"use client";
+
 import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,7 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -84,7 +86,9 @@ export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
   // ダイアログで削除確定時
   const confirmDelete = () => {
     if (selectedItemId) {
-      setPinnedPosts((prev) => prev.filter((post) => post.id !== selectedItemId));
+      setPinnedPosts((prev) =>
+        prev.filter((post) => post.id !== selectedItemId)
+      );
       setDeleteDialogOpen(false);
       setSelectedItemId(null);
     }
@@ -207,7 +211,10 @@ export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+            >
               キャンセル
             </Button>
             <Button variant="destructive" onClick={confirmDelete}>

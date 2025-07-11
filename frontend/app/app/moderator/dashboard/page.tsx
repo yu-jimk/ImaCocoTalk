@@ -1,27 +1,11 @@
-"use client";
-
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { LogOut, ArrowLeft } from "lucide-react";
-import { QrCodeDialog } from "@/components/QrCodeDialog";
 import { DashboardOverview } from "./components/DashboardOverview";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ReportsTab } from "./components/ReportsTab";
 import { PostsTab } from "./components/PostsTab";
 import { PinnedTab } from "./components/PinnedTab";
 import { SettingsTab } from "./components/SettingsTab";
+import { LogoutDialog } from "@/components/LogoutDialog";
 
 // Mock data for moderator
 const storeInfo = {
@@ -43,7 +27,7 @@ const storeInfo = {
 const reportedPosts = [
   {
     id: 1,
-    user: { name: "匿名ユーザー", avatar: "/placeholder-user.jpg" },
+    user: { name: "匿名ユーザー", avatar: "" },
     content: "この店のサービスは最悪でした。二度と行きません。",
     timestamp: "2時間前",
     reports: 3,
@@ -53,7 +37,7 @@ const reportedPosts = [
   },
   {
     id: 2,
-    user: { name: "田中太郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "田中太郎", avatar: "" },
     content: "スタッフの態度が悪い。改善してほしい。",
     timestamp: "5時間前",
     reports: 1,
@@ -66,24 +50,32 @@ const reportedPosts = [
 const allPosts = [
   {
     id: 3,
-    user: { name: "佐藤花子", avatar: "/placeholder-user.jpg" },
+    user: { name: "佐藤花子", avatar: "" },
     content:
       "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
     timestamp: "1日前",
     likes: 12,
+    isLiked: false,
     comments: 3,
     status: "approved",
     rating: 4.5,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
   {
     id: 4,
-    user: { name: "山田次郎", avatar: "/placeholder-user.jpg" },
+    user: { name: "山田次郎", avatar: "" },
     content: "パンケーキが絶品でした🥞 また来たいと思います！",
     timestamp: "2日前",
     likes: 8,
+    isLiked: false,
     comments: 1,
     status: "approved",
     rating: 4.0,
+    store: {
+      name: "カフェ・ド・パリ",
+    },
   },
 ];
 
@@ -104,48 +96,26 @@ const pinnedPosts = [
 ];
 
 export default function ModeratorPage() {
-  const router = useRouter();
-  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
-  const [qrDialogOpen, setQrDialogOpen] = useState(false);
-
-  const handleLogout = () => setLogoutDialogOpen(true);
-  const confirmLogout = () => {
-    console.log("Logout");
-    router.push("/moderator/login");
-  };
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-orange-600 hover:bg-orange-100"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <h1 className="text-lg font-semibold text-gray-800">管理画面</h1>
+            <h1 className="text-lg font-semibold text-gray-800">
+              モデレーター管理画面
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-orange-500 text-white">店舗運営者</Badge>
-            <Button variant="ghost" size="icon" onClick={handleLogout}>
-              <LogOut className="h-5 w-5" />
-            </Button>
+            <LogoutDialog redirectUrl="/moderator/login" />
           </div>
         </div>
       </div>
 
       <div className="p-4">
         {/* 概要（統計＋QR） */}
-        <DashboardOverview
-          storeInfo={storeInfo}
-          onQrClick={() => setQrDialogOpen(true)}
-        />
+        <DashboardOverview storeInfo={storeInfo} />
         {/* タブ */}
         <Tabs defaultValue="reports" className="space-y-4">
           <TabsList className="grid w-full grid-cols-4 bg-white">
@@ -178,7 +148,7 @@ export default function ModeratorPage() {
             <ReportsTab reportedPosts={reportedPosts} />
           </TabsContent>
           <TabsContent value="posts" className="space-y-4">
-            <PostsTab allPosts={allPosts} />
+            <PostsTab posts={allPosts} />
           </TabsContent>
           <TabsContent value="pinned" className="space-y-4">
             <PinnedTab pinnedPosts={pinnedPosts} />
@@ -188,32 +158,6 @@ export default function ModeratorPage() {
           </TabsContent>
         </Tabs>
       </div>
-
-      {/* Logout Confirmation Dialog */}
-      <QrCodeDialog
-        open={qrDialogOpen}
-        onOpenChange={setQrDialogOpen}
-        value={storeInfo.qrCodeValue}
-      />
-      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>ログアウトしますか？</DialogTitle>
-            <DialogDescription>
-              ログアウトすると、再度ログインが必要になります。
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setLogoutDialogOpen(false)}
-            >
-              キャンセル
-            </Button>
-            <Button onClick={confirmLogout}>ログアウト</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

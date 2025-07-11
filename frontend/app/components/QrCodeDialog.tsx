@@ -4,7 +4,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { QRCode } from "@/components/qr-code";
+import { QRCode } from "@/components/QrCode";
 import { QrCode } from "lucide-react";
 import type { FC } from "react";
 
