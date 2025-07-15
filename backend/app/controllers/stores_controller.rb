@@ -2,11 +2,11 @@ class StoresController < ApplicationController
   before_action :set_store, only: %i[ show update destroy ]
 
   # GET /stores
-  def index
-    @stores = Store.all
+  # def index
+  #   @stores = Store.all
 
-    render json: @stores
-  end
+  #   render json: @stores
+  # end
 
   # GET /stores/1
   def show
@@ -14,15 +14,15 @@ class StoresController < ApplicationController
   end
 
   # POST /stores
-  def create
-    @store = Store.new(store_params)
+  # def create
+  #   @store = Store.new(store_params)
 
-    if @store.save
-      render json: @store, status: :created, location: @store
-    else
-      render json: @store.errors, status: :unprocessable_entity
-    end
-  end
+  #   if @store.save
+  #     render json: @store, status: :created, location: @store
+  #   else
+  #     render json: @store.errors, status: :unprocessable_entity
+  #   end
+  # end
 
   # PATCH/PUT /stores/1
   def update
@@ -34,9 +34,9 @@ class StoresController < ApplicationController
   end
 
   # DELETE /stores/1
-  def destroy
-    @store.destroy!
-  end
+  # def destroy
+  #   @store.destroy!
+  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
