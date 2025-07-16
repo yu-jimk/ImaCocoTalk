@@ -9,6 +9,9 @@ WORKDIR ${APP_HOME}
 # コンテナがリッスンするポートを指定
 EXPOSE 3000
 
+# Linuxビルドツール必要（bcrypt用）
+RUN apt-get update -qq && apt-get install -y build-essential libpq-dev
+
 # ローカルのGemfileをコンテナ内にコピー
 COPY Gemfile ${APP_HOME}/Gemfile
 COPY Gemfile.lock ${APP_HOME}/Gemfile.lock

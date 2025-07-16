@@ -110,6 +110,11 @@ GEM
       pp (>= 0.6.0)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
+    jbuilder (2.13.0)
+      actionview (>= 5.0.0)
+      activesupport (>= 5.0.0)
+    jwt (3.1.2)
+      base64
     logger (1.7.0)
     loofah (2.24.1)
       crass (~> 1.0.2)
@@ -213,6 +218,8 @@ DEPENDENCIES
   debug
   dotenv-rails
   faker
+  jbuilder
+  jwt
   mysql2 (~> 0.5)
   puma (>= 5.0)
   rack-cors (~> 3.0)

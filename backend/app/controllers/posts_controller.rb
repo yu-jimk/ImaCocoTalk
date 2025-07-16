@@ -1,12 +1,5 @@
-class PostsController < ApplicationController
+class PostsController < BaseController
   before_action :set_post, only: %i[ show update destroy ]
-
-  # GET /posts
-  def index
-    @posts = Post.all
-
-    render json: @posts
-  end
 
   # GET /posts/1
   def show
@@ -36,6 +29,10 @@ class PostsController < ApplicationController
   # DELETE /posts/1
   def destroy
     @post.destroy!
+  end
+
+  def report
+    # 通報
   end
 
   private
