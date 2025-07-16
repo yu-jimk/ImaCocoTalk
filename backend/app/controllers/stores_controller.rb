@@ -1,4 +1,4 @@
-class StoresController < ApplicationController
+class StoresController < BaseController
   before_action :set_store, only: %i[ show update destroy ]
 
   # GET /stores

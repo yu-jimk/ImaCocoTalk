@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     # 認証
     post "auth/signup", to: "auth#signup"
     post "auth/login",  to: "auth#login"
-    post "auth/logout", to: "auth#logout"
+    delete "auth/logout", to: "auth#logout"
 
     # ユーザー
     get    "users/me",           to: "users#me"
@@ -34,8 +34,8 @@ Rails.application.routes.draw do
 
     # モデレーター
     namespace :moderator do
-      post "login",  to: "sessions#create"
-      post "logout", to: "sessions#destroy"
+      post 'auth/login', to: 'auth#login'
+      delete 'auth/logout', to: 'auth#logout'
 
       get "dashboard/summary", to: "dashboard#summary"
       get "store/qrcode",      to: "store#qrcode"

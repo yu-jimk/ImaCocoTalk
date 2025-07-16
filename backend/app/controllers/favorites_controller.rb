@@ -1,4 +1,4 @@
-class FavoritesController < ApplicationController
+class FavoritesController < BaseController
 
   # POST /favorites/toggle
   def toggle

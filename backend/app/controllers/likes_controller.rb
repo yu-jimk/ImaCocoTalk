@@ -1,4 +1,4 @@
-class LikesController < ApplicationController
+class LikesController < BaseController
 
   # POST /likes/toggle
   def toggle

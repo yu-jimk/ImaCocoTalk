@@ -1,4 +1,4 @@
-class CheckInsController < ApplicationController
+class CheckInsController < BaseController
 
   def validate
     # GPS / QRコードチェックイン検証

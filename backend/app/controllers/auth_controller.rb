@@ -1,5 +1,5 @@
 # app/controllers/auth_controller.rb
-class AuthController < ApplicationController
+class AuthController < BaseController
   skip_before_action :authenticate_user!, only: [:signup, :login]
 
   def signup
@@ -25,7 +25,7 @@ class AuthController < ApplicationController
   end
 
   def logout
-    cookies.delete(:jwt)
+    cookies.delete(:user_jwt)
     render json: { message: "Logged out" }
   end
 
@@ -36,7 +36,7 @@ class AuthController < ApplicationController
   end
 
   def set_jwt_cookie(token)
-    cookies.signed[:jwt] = {
+    cookies.signed[:user_jwt] = {
       value: token,
       httponly: true,
       secure: false,
