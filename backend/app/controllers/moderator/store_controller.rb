@@ -1,6 +1,8 @@
-class Moderator::StoreController < ApplicationController
+class Moderator::StoreController < Moderator::BaseController
   def show
     # 店舗詳細（モデレーター専用）
+    @store = Store.find(params[:id])
+    render json: @store
   end
 
   def update

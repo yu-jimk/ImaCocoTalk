@@ -1,4 +1,4 @@
-class Moderator::AnnouncementsController < ApplicationController
+class Moderator::AnnouncementsController < Moderator::BaseController
   def create
     # お知らせ作成
   end

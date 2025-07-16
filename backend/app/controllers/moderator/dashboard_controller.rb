@@ -1,4 +1,4 @@
-class Moderator::DashboardController < ApplicationController
+class Moderator::DashboardController < Moderator::BaseController
   def summary
     # ダッシュボード サマリー情報
   end
