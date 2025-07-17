@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect, useRef } from "react";
 import { ThumbsUp } from "lucide-react";
 
@@ -22,12 +24,13 @@ export function LikeButton({
     const initialValue = initialLikedRef.current;
     return () => {
       if (isLikedRef.current !== initialValue) {
-        fetch(`/api/posts/${postId}/like`, {
+        fetch(`http://localhost:3000/api/likes/toggle`, {
           method: "POST",
           body: JSON.stringify({
-            isLiked: isLikedRef.current,
+            post_id: postId,
           }),
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         }).catch((e) => {
           console.error("いいね保存失敗", e);
         });
