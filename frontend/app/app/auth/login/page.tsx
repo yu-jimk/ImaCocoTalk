@@ -1,5 +1,8 @@
+"use client";
+
 import Link from "next/link";
-import Form from "next/form";
+// import Form from "next/form";
+import { useRouter } from "next/navigation";
 
 import { MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -7,9 +10,29 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 
-import { loginAction } from "./actions";
+// import { loginAction } from "./actions";
 
 export default function LoginPage() {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const res = await fetch("http://localhost:3000/api/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: formData.get("email"),
+        password: formData.get("password"),
+      }),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!res.ok) {
+      alert("ログイン失敗");
+      return;
+    }
+    router.push("/");
+  }
+
+  const router = useRouter();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md py-6">
@@ -25,7 +48,7 @@ export default function LoginPage() {
           <p className="text-gray-600 text-sm">位置連動型口コミアプリ</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Form action={loginAction} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">メールアドレス</Label>
               <Input
@@ -49,7 +72,7 @@ export default function LoginPage() {
             <Button type="submit" className="w-full">
               ログイン
             </Button>
-          </Form>
+          </form>
 
           <div className="text-center space-y-2">
             <Link

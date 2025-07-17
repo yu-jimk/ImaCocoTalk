@@ -25,6 +25,7 @@ class Moderator::AuthController < Moderator::BaseController
       httponly: true,
       secure: false,
       same_site: :lax,
+      domain: :all,
       expires: 24.hours.from_now,
     }
   end

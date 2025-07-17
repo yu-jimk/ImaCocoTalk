@@ -4,9 +4,15 @@ export async function loginAction(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
-  // ログイン処理をシミュレート
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const res = await fetch("http://localhost:3000/api/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ email, password }),
+  });
 
-  console.log("Login:", { email, password });
-  // 実際の実装では認証処理とリダイレクトを行う
+  if (!res.ok) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data.error || "ログインに失敗しました");
+  }
 }
