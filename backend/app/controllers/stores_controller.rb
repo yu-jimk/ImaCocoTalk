@@ -1,18 +1,27 @@
 class StoresController < BaseController
-  before_action :set_store, only: %i[ show update ]
+  before_action :set_store, only: %i[ show update posts]
 
   def nearby
-
   end
 
   # GET /stores/1
   def show
-    puts "current_user.id: #{current_user&.id}"
-    puts "@store.id: #{@store.id}"
-    puts "favorite store_ids: #{current_user.favorites.pluck(:store_id)}"
-    puts "favorited?: #{current_user.favorited?(@store)}"
     @is_favorited = current_user&.favorited?(@store) || false
   end
+
+  def posts
+    page = params[:page].to_i > 0 ? params[:page].to_i : 1
+    limit = params[:limit].to_i > 0 ? params[:limit].to_i : 20
+    offset = (page - 1) * limit
+
+    @current_user = current_user
+    @posts = @store.posts.includes(:user, :likes).order(created_at: :desc).offset(offset).limit(limit)
+    @total_count = @store.posts.count
+
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Store not found" }, status: :not_found
+  end
+  
 
   # PATCH/PUT /stores/1
   def update

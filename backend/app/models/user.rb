@@ -1,3 +1,5 @@
+require 'digest/md5'
+
 class User < ApplicationRecord
   has_secure_password
 
@@ -11,5 +13,12 @@ class User < ApplicationRecord
 
   def favorited?(store)
     favorites.exists?(store_id: store.id)
+  end
+
+  # Gravatar URLを返すメソッド
+  def gravatar_url(size: 80)
+    email_address = email.downcase.strip
+    hash = Digest::MD5.hexdigest(email_address)
+    "https://www.gravatar.com/avatar/#{hash}?s=#{size}&d=identicon"
   end
 end

@@ -43,5 +43,7 @@ module App
 
     config.middleware.use ActionDispatch::Cookies
     config.middleware.use ActionDispatch::Session::CookieStore, key: '_imacocotalk_session'
+
+    config.i18n.default_locale = :ja
   end
 end
