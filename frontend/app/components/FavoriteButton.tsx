@@ -8,7 +8,7 @@ export function FavoriteButton({
   storeId,
   initialFavorited,
 }: {
-  storeId: number;
+  storeId: string;
   initialFavorited: boolean;
 }) {
   const [isFavorited, setIsFavorited] = useState(initialFavorited);
@@ -19,12 +19,13 @@ export function FavoriteButton({
     const initialValue = initialFavoritedRef.current;
     return () => {
       if (isFavoritedRef.current !== initialValue) {
-        fetch(`/api/stores/${storeId}/favorite`, {
+        fetch(`http://localhost:3000/api/favorites/toggle`, {
           method: "POST",
           body: JSON.stringify({
-            isFavorited: isFavoritedRef.current,
+            store_id: storeId,
           }),
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
         }).catch((e) => {
           console.error("お気に入り保存失敗", e);
         });
