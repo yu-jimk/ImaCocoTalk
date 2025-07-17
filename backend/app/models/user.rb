@@ -8,4 +8,8 @@ class User < ApplicationRecord
   has_many :liked_posts, through: :likes, source: :post
   has_many :favorites, dependent: :destroy
   has_many :favorite_stores, through: :favorites, source: :store
+
+  def favorited?(store)
+    favorites.exists?(store_id: store.id)
+  end
 end

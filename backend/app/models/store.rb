@@ -8,4 +8,15 @@ class Store < ApplicationRecord
   has_many :announcements, dependent: :destroy
   has_many :favorites, dependent: :destroy
   has_many :favorite_users, through: :favorites, source: :user
+
+  def average_rating
+    posts.average(:rating).to_f.round(1) || 0.0
+  end
+
+  def today_open_hours
+    return nil unless opening_hours.present?
+    hours = opening_hours.is_a?(String) ? JSON.parse(opening_hours) : opening_hours
+    today_key = Date.today.strftime("%a").downcase
+    hours[today_key]
+  end
 end

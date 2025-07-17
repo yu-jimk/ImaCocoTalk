@@ -5,24 +5,7 @@ import Link from "next/link";
 import { StoreInfo } from "./StoreInfo";
 import { AllPosts } from "./AllPosts";
 import type { Post, StoreData } from "@/app/types";
-
-const store: StoreData = {
-  id: 1,
-  name: "カフェ・ド・パリ",
-  genres: ["カフェ", "フレンチ", "デザート"],
-  address: "東京都渋谷区神南1-1-1",
-  postalCode: "150-0041",
-  distance: "50m",
-  rating: 4.5,
-  description:
-    "パリの雰囲気を楽しめる本格的なカフェです。厳選されたコーヒー豆を使用し、熟練のバリスタが一杯一杯丁寧に淹れています。WiFi完備で電源も利用可能なため、リモートワークにも最適です。落ち着いた店内では、ゆったりとした時間をお過ごしいただけます。",
-  openHours: "8:00 - 22:00",
-  phone: "03-1234-5678",
-  features: ["WiFi完備", "電源あり", "禁煙", "テイクアウト可"],
-  user: {
-    isFavorited: false,
-  },
-};
+import { cookies } from "next/headers";
 
 const posts: Post[] = [
   {
@@ -105,15 +88,19 @@ export default async function StoreDetailPage({
   const storeId = (await params).id;
   const page = parseInt((await searchParams).page || "1", 10);
   if (isNaN(page) || page < 1) return notFound();
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("user_jwt")?.value;
 
-  //   const storeRes = await fetch(
-  //     `${process.env.NEXT_PUBLIC_API_URL}/stores/${storeId}`,
-  //     {
-  //       next: { revalidate: 3600 },
-  //     }
-  //   );
-  //   if (!storeRes.ok) return notFound();
-  //   const store: StoreData = await storeRes.json();
+  const storeRes = await fetch(`http://backend:3000/api/stores/${storeId}`, {
+    // next: { revalidate: 3600 },
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `user_jwt=${cookieHeader}`,
+    },
+  });
+  if (!storeRes.ok) return notFound();
+  const store: StoreData = await storeRes.json();
 
   //   const postsRes = await fetch(
   //     `${process.env.NEXT_PUBLIC_API_URL}/stores/${storeId}/posts?page=${page}&limit=${POSTS_PER_PAGE}`,

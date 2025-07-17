@@ -1,28 +1,18 @@
 class StoresController < BaseController
-  before_action :set_store, only: %i[ show update destroy ]
+  before_action :set_store, only: %i[ show update ]
 
-  # GET /stores
-  # def index
-  #   @stores = Store.all
+  def nearby
 
-  #   render json: @stores
-  # end
+  end
 
   # GET /stores/1
   def show
-    render json: @store
+    puts "current_user.id: #{current_user&.id}"
+    puts "@store.id: #{@store.id}"
+    puts "favorite store_ids: #{current_user.favorites.pluck(:store_id)}"
+    puts "favorited?: #{current_user.favorited?(@store)}"
+    @is_favorited = current_user&.favorited?(@store) || false
   end
-
-  # POST /stores
-  # def create
-  #   @store = Store.new(store_params)
-
-  #   if @store.save
-  #     render json: @store, status: :created, location: @store
-  #   else
-  #     render json: @store.errors, status: :unprocessable_entity
-  #   end
-  # end
 
   # PATCH/PUT /stores/1
   def update
@@ -32,11 +22,6 @@ class StoresController < BaseController
       render json: @store.errors, status: :unprocessable_entity
     end
   end
-
-  # DELETE /stores/1
-  # def destroy
-  #   @store.destroy!
-  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.
