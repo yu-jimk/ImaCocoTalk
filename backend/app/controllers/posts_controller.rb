@@ -1,5 +1,5 @@
 class PostsController < BaseController
-  before_action :set_post, only: %i[ show update destroy ]
+  before_action :set_post, only: %i[ show update destroy report ]
 
   # GET /posts/1
   def show
@@ -32,8 +32,15 @@ class PostsController < BaseController
   end
 
   def report
-    # 通報
+    @report = @post.reports.new(user: current_user, reason: params[:reason])
+  
+    if @report.save
+      render json: { message: '通報を受け付けました' }, status: :ok
+    else
+      render json: { error: @report.errors.full_messages.to_sentence }, status: :unprocessable_entity
+    end
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
