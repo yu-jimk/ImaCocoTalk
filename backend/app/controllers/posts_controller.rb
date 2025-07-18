@@ -3,7 +3,7 @@ class PostsController < BaseController
 
   # GET /posts/1
   def show
-    render json: @post
+    @current_user = current_user
   end
 
   # POST /posts
