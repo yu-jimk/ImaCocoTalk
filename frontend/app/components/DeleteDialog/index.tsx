@@ -13,7 +13,7 @@ import {
 import { submitDelete } from "./actions";
 
 type DeleteDialogProps = {
-  postId: number;
+  postId: string;
   isDeleteDialogOpen: boolean;
   setDeleteDialogOpen: (open: boolean) => void;
 };

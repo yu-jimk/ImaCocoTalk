@@ -1,6 +1,6 @@
 "use server";
 
-export async function submitDelete(postId: number) {
+export async function submitDelete(postId: string) {
   if (!postId) {
     throw new Error("postIdが不正です");
   }

@@ -9,7 +9,7 @@ export function LikeButton({
   initialCount = 0,
   disabled = false,
 }: {
-  postId: number;
+  postId: string;
   initialLiked: boolean;
   initialCount: number;
   disabled?: boolean;
