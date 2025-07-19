@@ -7,7 +7,7 @@ export function CheckinsTab({ stores }: { stores: StoreMyPage[] }) {
   return (
     <TabsContent value="checkins" className="space-y-3">
       {stores.map((store) => (
-        <StoreCard key={store.id} store={store} showCheckins={true} />
+        <StoreCard key={store.store_id} store={store} showCheckins={true} />
       ))}
     </TabsContent>
   );

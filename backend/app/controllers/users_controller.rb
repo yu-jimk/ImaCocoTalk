@@ -1,34 +1,40 @@
 class UsersController < BaseController
-  before_action :set_user, only: %i[ show update destroy ]
+  # before_action :set_user, only: %i[ show update destroy ]
 
-  # GET /users/1
-  def show
-    render json: @user
+  # GET /users/me
+  def me
+    @user = current_user
   end
 
-  # POST /users
-  def create
-    @user = User.new(user_params)
-
-    if @user.save
-      render json: @user, status: :created, location: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
+  # PATCH /users/me
+  def update_me
   end
 
-  # PATCH/PUT /users/1
-  def update
-    if @user.update(user_params)
-      render json: @user
-    else
-      render json: @user.errors, status: :unprocessable_entity
-    end
+  # DELETE /users/me
+  def destroy_me
   end
 
-  # DELETE /users/1
-  def destroy
-    @user.destroy!
+  # GET /users/me/posts
+  def my_posts
+    posts = current_user.posts.includes(:user, :store, :likes).order(created_at: :desc)
+    render 'users/my_posts', locals: { posts: posts }
+  end
+
+  # GET /users/me/check_ins
+  def my_check_ins
+    @check_ins = current_user.check_ins.includes(:store).order(created_at: :desc)
+  end
+
+  # GET /users/me/favorites
+  def my_favorites
+    stores = current_user.favorite_stores.includes(:check_ins)
+    render :my_favorites, locals: { stores: stores }
+  end
+
+  # GET /users/me/likes
+  def my_likes
+    posts = current_user.liked_posts.includes(:user, :store)
+    render :my_likes, locals: { posts: posts }
   end
 
   private

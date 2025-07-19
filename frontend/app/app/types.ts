@@ -30,7 +30,8 @@ export type Post = {
 };
 
 export type StoreMyPage = {
-  id: number;
+  id: string;
+  store_id: string;
   name: string;
   genre: string;
   date?: string;

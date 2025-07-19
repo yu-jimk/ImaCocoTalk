@@ -48,16 +48,16 @@ export default async function PostDetailPage({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b px-4 py-3">
+      <header className="bg-white border-b px-4 py-3">
         <div className="flex items-center gap-3">
-          <Link href="/stores/1">
+          <Link href="/stores/20">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <h1 className="text-lg font-semibold">投稿詳細</h1>
         </div>
-      </div>
+      </header>
 
       <div className="p-4 space-y-4">
         {/* Main Post */}

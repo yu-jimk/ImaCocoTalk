@@ -11,7 +11,7 @@ import Link from "next/link";
 // Mock data for stores with enhanced information
 const stores = [
   {
-    id: 1,
+    id: 20,
     name: "カフェ・ド・パリ",
     genre: "カフェ",
     distance: "50m",
