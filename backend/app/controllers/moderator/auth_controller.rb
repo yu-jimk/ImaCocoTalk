@@ -13,7 +13,7 @@ class Moderator::AuthController < Moderator::BaseController
   end
 
   def logout
-    cookies.delete(:moderator_jwt)
+    cookies.delete(:moderator_jwt, domain: :all, path: '/')
     render json: { message: "Logged out" }
   end
 
@@ -27,6 +27,7 @@ class Moderator::AuthController < Moderator::BaseController
       same_site: :lax,
       domain: :all,
       expires: 24.hours.from_now,
+      path: '/'
     }
   end
 end

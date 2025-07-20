@@ -20,3 +20,21 @@ export async function logoutAction() {
 
   redirect("/auth/login");
 }
+
+export async function moderatorLogoutAction() {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("moderator_jwt")?.value;
+
+  await fetch(`http://backend:3000/api/moderator/auth/logout`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `moderator_jwt=${cookieHeader}`,
+    },
+  });
+
+  cookieStore.delete("moderator_jwt");
+
+  redirect("/moderator/login");
+}

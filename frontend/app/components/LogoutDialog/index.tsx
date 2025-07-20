@@ -12,11 +12,15 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useFormStatus } from "react-dom";
-import { logoutAction } from "./actions";
+import { usePathname } from "next/navigation";
+import { logoutAction, moderatorLogoutAction } from "./actions";
 
 export function LogoutDialog() {
   const { pending } = useFormStatus();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const pathname = usePathname();
+  const isModerator = pathname.startsWith("/moderator/dashboard");
+  const action = isModerator ? moderatorLogoutAction : logoutAction;
 
   const handleLogout = () => {
     setLogoutDialogOpen(true);
@@ -44,7 +48,7 @@ export function LogoutDialog() {
             >
               キャンセル
             </Button>
-            <form action={logoutAction}>
+            <form action={action}>
               <Button type="submit" className="w-full" disabled={pending}>
                 {pending ? "ログアウト中..." : "ログアウト"}
               </Button>
