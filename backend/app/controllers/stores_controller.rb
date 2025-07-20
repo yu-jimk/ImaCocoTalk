@@ -22,6 +22,14 @@ class StoresController < BaseController
   # GET /stores/1
   def show
     @is_favorited = current_user&.favorited?(@store) || false
+
+    lat = params[:lat].to_f
+    lng = params[:lng].to_f
+    distance_km = Geocoder::Calculations.distance_between(
+      [lat, lng],
+      [@store.latitude, @store.longitude]
+    )
+    @distance_m = (distance_km * 1000).round
   end
 
   def posts

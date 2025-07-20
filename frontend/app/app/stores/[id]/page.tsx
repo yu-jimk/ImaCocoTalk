@@ -19,18 +19,23 @@ export default async function StoreDetailPage({
   const storeId = (await params).id;
   const page = parseInt((await searchParams).page || "1", 10);
   if (isNaN(page) || page < 1) return notFound();
+  const lat: number = 35.6762;
+  const lng: number = 139.6503;
 
   const cookieStore = await cookies();
   const cookieHeader = cookieStore.get("user_jwt")?.value;
 
-  const storeRes = await fetch(`http://backend:3000/api/stores/${storeId}`, {
-    next: { revalidate: 3600 },
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-      Cookie: `user_jwt=${cookieHeader}`,
-    },
-  });
+  const storeRes = await fetch(
+    `http://backend:3000/api/stores/${storeId}?lat=${lat}&lng=${lng}`,
+    {
+      next: { revalidate: 3600 },
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `user_jwt=${cookieHeader}`,
+      },
+    }
+  );
   if (!storeRes.ok) return notFound();
   const store: StoreData = await storeRes.json();
 

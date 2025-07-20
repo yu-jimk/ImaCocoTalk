@@ -3,7 +3,7 @@ json.name @store.name
 json.genres @store.place_types || []
 json.address @store.address
 json.postalCode @store.postal_code
-json.distance "50m"
+json.distance "#{@distance_m}m"
 json.rating @store.average_rating
 json.description @store.description
 json.openHours @store.today_open_hours
