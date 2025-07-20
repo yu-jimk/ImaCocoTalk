@@ -68,53 +68,55 @@ export function PostCard({
                   </span>
                 </div>
                 {/* ケバブメニュー 右寄せ */}
-                <div className="ml-auto">
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 text-gray-400 hover:text-gray-600"
-                        onClick={(e) => e.preventDefault()}
-                      >
-                        <MoreVertical className="h-4 w-4" />
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      {showReportMenu && (
-                        <DropdownMenuItem
-                          className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => setReportDialogOpen(true)}
+                {showDeleteMenu && showEditMenu && showReportMenu && (
+                  <div className="ml-auto">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-8 w-8 text-gray-400 hover:text-gray-600"
+                          onClick={(e) => e.preventDefault()}
                         >
-                          <Flag className="h-4 w-4" />
-                          通報する
-                        </DropdownMenuItem>
-                      )}
-
-                      {showEditMenu && (
-                        <DropdownMenuItem asChild>
-                          <Link
-                            href={`/posts/${post.id}/edit`}
-                            className="flex items-center gap-2"
+                          <MoreVertical className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        {showReportMenu && (
+                          <DropdownMenuItem
+                            className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => setReportDialogOpen(true)}
                           >
-                            <Edit className="h-4 w-4" />
-                            編集
-                          </Link>
-                        </DropdownMenuItem>
-                      )}
+                            <Flag className="h-4 w-4" />
+                            通報する
+                          </DropdownMenuItem>
+                        )}
 
-                      {showDeleteMenu && (
-                        <DropdownMenuItem
-                          className="flex items-center gap-2 text-red-600"
-                          onClick={() => setDeleteDialogOpen(true)}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          削除
-                        </DropdownMenuItem>
-                      )}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+                        {showEditMenu && (
+                          <DropdownMenuItem asChild>
+                            <Link
+                              href={`/posts/${post.id}/edit`}
+                              className="flex items-center gap-2"
+                            >
+                              <Edit className="h-4 w-4" />
+                              編集
+                            </Link>
+                          </DropdownMenuItem>
+                        )}
+
+                        {showDeleteMenu && (
+                          <DropdownMenuItem
+                            className="flex items-center gap-2 text-red-600"
+                            onClick={() => setDeleteDialogOpen(true)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                            削除
+                          </DropdownMenuItem>
+                        )}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                )}
               </div>
               <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1">
                 <StarRating value={post.rating} readOnly size="sm" />

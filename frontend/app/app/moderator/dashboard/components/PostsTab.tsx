@@ -11,12 +11,7 @@ export function PostsTab({ posts }: { posts: Post[] }) {
         <h2 className="font-semibold text-blue-700">全投稿管理</h2>
       </div>
       {posts.map((post) => (
-        <PostCard
-          key={post.id}
-          post={post}
-          showDeleteMenu={true}
-          likeButtonDisabled={true}
-        />
+        <PostCard key={post.id} post={post} likeButtonDisabled={true} />
       ))}
     </TabsContent>
   );

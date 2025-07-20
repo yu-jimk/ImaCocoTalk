@@ -47,35 +47,35 @@ import { notFound } from "next/navigation";
 //   },
 // ];
 
-const allPosts = [
-  {
-    id: "3",
-    user: { name: "佐藤花子", avatar: "" },
-    content:
-      "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
-    timestamp: "1日前",
-    likes: 12,
-    isLiked: false,
-    comments: 3,
-    rating: 4.5,
-    store: {
-      name: "カフェ・ド・パリ",
-    },
-  },
-  {
-    id: "4",
-    user: { name: "山田次郎", avatar: "" },
-    content: "パンケーキが絶品でした🥞 また来たいと思います！",
-    timestamp: "2日前",
-    likes: 8,
-    isLiked: false,
-    comments: 1,
-    rating: 4.0,
-    store: {
-      name: "カフェ・ド・パリ",
-    },
-  },
-];
+// const allPosts = [
+//   {
+//     id: "3",
+//     user: { name: "佐藤花子", avatar: "" },
+//     content:
+//       "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
+//     timestamp: "1日前",
+//     likes: 12,
+//     isLiked: false,
+//     comments: 3,
+//     rating: 4.5,
+//     store: {
+//       name: "カフェ・ド・パリ",
+//     },
+//   },
+//   {
+//     id: "4",
+//     user: { name: "山田次郎", avatar: "" },
+//     content: "パンケーキが絶品でした🥞 また来たいと思います！",
+//     timestamp: "2日前",
+//     likes: 8,
+//     isLiked: false,
+//     comments: 1,
+//     rating: 4.0,
+//     store: {
+//       name: "カフェ・ド・パリ",
+//     },
+//   },
+// ];
 
 const pinnedPosts = [
   {
@@ -119,6 +119,16 @@ export default async function ModeratorPage() {
   });
   if (!reportRes.ok) return notFound();
   const reportedPosts = await reportRes.json();
+
+  const postRes = await fetch(`http://backend:3000/api/moderator/store/posts`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `moderator_jwt=${cookieHeader}`,
+    },
+  });
+  if (!postRes.ok) return notFound();
+  const allPosts = await postRes.json();
 
   return (
     <div className="min-h-screen bg-gray-50">

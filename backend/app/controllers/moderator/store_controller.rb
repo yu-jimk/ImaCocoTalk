@@ -15,5 +15,9 @@ class Moderator::StoreController < Moderator::BaseController
 
   def posts
     # 店舗への投稿一覧
+    store = current_moderator.store
+    @posts = store.posts.includes(:user)
+
+    render formats: :json
   end
 end
