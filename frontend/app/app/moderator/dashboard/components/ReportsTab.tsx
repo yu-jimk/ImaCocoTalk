@@ -1,5 +1,3 @@
-"use client";
-
 import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -7,16 +5,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AlertTriangle, Trash2, Eye, Clock } from "lucide-react";
 import { StarRating } from "@/components/StarRating";
-import { useState } from "react";
+import { deleteReportedPostAction, approveReportedPostAction } from "./actions";
 
 type ReportedPost = {
-  id: number;
+  id: string;
   user: { name: string; avatar: string };
   content: string;
   timestamp: string;
   reports: number;
   reportReasons: string[];
-  status: string;
   rating: number;
 };
 
@@ -24,20 +21,19 @@ type ReportsTabProps = {
   reportedPosts: ReportedPost[];
 };
 
-export function ReportsTab({
-  reportedPosts: initialReportedPosts,
-}: ReportsTabProps) {
-  const [reportedPosts, setReportedPosts] = useState(initialReportedPosts);
+const reportReasons = [
+  { id: "inappropriate", label: "不適切な内容" },
+  { id: "spam", label: "スパム・宣伝" },
+  { id: "harassment", label: "誹謗中傷・嫌がらせ" },
+  { id: "false_info", label: "虚偽の情報" },
+  { id: "copyright", label: "著作権侵害" },
+  { id: "other", label: "その他" },
+];
 
-  const handleDeletePost = (postId: number) => {
-    setReportedPosts((prev) => prev.filter((post) => post.id !== postId));
-    // API連携等はここで
-  };
-
-  const handleApprovePost = (postId: number) => {
-    setReportedPosts((prev) => prev.filter((post) => post.id !== postId));
-    // API連携等はここで
-  };
+export async function ReportsTab({ reportedPosts }: ReportsTabProps) {
+  const reasonLabelMap = Object.fromEntries(
+    reportReasons.map((r) => [r.id, r.label])
+  );
 
   return (
     <TabsContent value="reports" className="space-y-4">
@@ -75,35 +71,37 @@ export function ReportsTab({
                   {post.content}
                 </p>
                 <div className="flex flex-wrap gap-1 mb-3">
-                  {post.reportReasons.map((reason, index) => (
+                  {post.reportReasons.map((reasonId, index) => (
                     <Badge
                       key={index}
                       variant="outline"
                       className="text-xs border-red-300 text-red-600"
                     >
-                      {reason}
+                      {reasonLabelMap[reasonId] || reasonId}
                     </Badge>
                   ))}
                 </div>
                 <div className="flex gap-2">
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    onClick={() => handleDeletePost(post.id)}
-                    className="bg-red-500 hover:bg-red-600"
-                  >
-                    <Trash2 className="h-3 w-3 mr-1" />
-                    削除
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    onClick={() => handleApprovePost(post.id)}
-                    className="border-green-500 text-green-600 hover:bg-green-50"
-                  >
-                    <Eye className="h-3 w-3 mr-1" />
-                    承認
-                  </Button>
+                  <form action={deleteReportedPostAction.bind(null, post.id)}>
+                    <Button
+                      size="sm"
+                      variant="destructive"
+                      className="bg-red-500 hover:bg-red-600"
+                    >
+                      <Trash2 className="h-3 w-3 mr-1" />
+                      削除
+                    </Button>
+                  </form>
+                  <form action={approveReportedPostAction.bind(null, post.id)}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="border-green-500 text-green-600 hover:bg-green-50"
+                    >
+                      <Eye className="h-3 w-3 mr-1" />
+                      承認
+                    </Button>
+                  </form>
                 </div>
               </div>
             </div>

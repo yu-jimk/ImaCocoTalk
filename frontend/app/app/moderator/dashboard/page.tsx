@@ -26,28 +26,26 @@ import { notFound } from "next/navigation";
 //   qrCodeValue: "https://imacoco-talk.com/checkin/cafe-de-paris",
 // };
 
-const reportedPosts = [
-  {
-    id: "1",
-    user: { name: "匿名ユーザー", avatar: "" },
-    content: "この店のサービスは最悪でした。二度と行きません。",
-    timestamp: "2時間前",
-    reports: 3,
-    reportReasons: ["不適切な内容", "誹謗中傷"],
-    status: "pending",
-    rating: 1.0,
-  },
-  {
-    id: "2",
-    user: { name: "田中太郎", avatar: "" },
-    content: "スタッフの態度が悪い。改善してほしい。",
-    timestamp: "5時間前",
-    reports: 1,
-    reportReasons: ["不適切な内容"],
-    status: "pending",
-    rating: 2.0,
-  },
-];
+// const reportedPosts = [
+//   {
+//     id: "1",
+//     user: { name: "匿名ユーザー", avatar: "" },
+//     content: "この店のサービスは最悪でした。二度と行きません。",
+//     timestamp: "2時間前",
+//     reports: 3,
+//     reportReasons: ["不適切な内容", "誹謗中傷"],
+//     rating: 1.0,
+//   },
+//   {
+//     id: "2",
+//     user: { name: "田中太郎", avatar: "" },
+//     content: "スタッフの態度が悪い。改善してほしい。",
+//     timestamp: "5時間前",
+//     reports: 1,
+//     reportReasons: ["不適切な内容"],
+//     rating: 2.0,
+//   },
+// ];
 
 const allPosts = [
   {
@@ -59,7 +57,6 @@ const allPosts = [
     likes: 12,
     isLiked: false,
     comments: 3,
-    status: "approved",
     rating: 4.5,
     store: {
       name: "カフェ・ド・パリ",
@@ -73,7 +70,6 @@ const allPosts = [
     likes: 8,
     isLiked: false,
     comments: 1,
-    status: "approved",
     rating: 4.0,
     store: {
       name: "カフェ・ド・パリ",
@@ -113,6 +109,17 @@ export default async function ModeratorPage() {
   );
   if (!storeRes.ok) return notFound();
   const storeInfo = await storeRes.json();
+
+  const reportRes = await fetch(`http://backend:3000/api/moderator/reports`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `moderator_jwt=${cookieHeader}`,
+    },
+  });
+  if (!reportRes.ok) return notFound();
+  const reportedPosts = await reportRes.json();
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}

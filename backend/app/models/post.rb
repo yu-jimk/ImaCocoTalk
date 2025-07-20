@@ -27,4 +27,12 @@ class Post < ApplicationRecord
     return false if user.nil?
     likes.exists?(user_id: user.id)
   end
+
+  def report_reasons
+    reports.pluck(:reason).uniq
+  end
+
+  def reports_count
+    reports.count
+  end
 end

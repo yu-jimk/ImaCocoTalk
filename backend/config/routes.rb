@@ -43,9 +43,11 @@ Rails.application.routes.draw do
       patch "store",           to: "store#update"
       get "store/posts",       to: "store#posts"
 
-      delete "posts/:id",      to: "posts#destroy"
-
-      resources :reports, only: [:index, :destroy]
+      resources :reports, only: [:index, :destroy] do
+        member do
+          patch :approve
+        end
+      end
       resources :announcements, only: [:create, :index, :update, :destroy]
     end
   end
