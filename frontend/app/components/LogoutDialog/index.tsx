@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import {
@@ -12,23 +11,15 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useFormStatus } from "react-dom";
+import { logoutAction } from "./actions";
 
-export function LogoutDialog({
-  redirectUrl = "/auth/login",
-}: {
-  redirectUrl?: string;
-}) {
-  const router = useRouter();
+export function LogoutDialog() {
+  const { pending } = useFormStatus();
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
 
   const handleLogout = () => {
     setLogoutDialogOpen(true);
-  };
-
-  const confirmLogout = () => {
-    // ログアウト処理
-    console.log("Logout");
-    router.push(redirectUrl);
   };
 
   return (
@@ -53,7 +44,11 @@ export function LogoutDialog({
             >
               キャンセル
             </Button>
-            <Button onClick={confirmLogout}>ログアウト</Button>
+            <form action={logoutAction}>
+              <Button type="submit" className="w-full" disabled={pending}>
+                {pending ? "ログアウト中..." : "ログアウト"}
+              </Button>
+            </form>
           </DialogFooter>
         </DialogContent>
       </Dialog>

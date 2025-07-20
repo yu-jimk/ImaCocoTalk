@@ -25,7 +25,7 @@ class AuthController < BaseController
   end
 
   def logout
-    cookies.delete(:user_jwt)
+    cookies.delete(:user_jwt, domain: :all, path: '/')
     render json: { message: "Logged out" }
   end
 
@@ -43,6 +43,7 @@ class AuthController < BaseController
       same_site: :lax,
       domain: :all,
       expires: 24.hours.from_now,
+      path: '/'
     }
   end
 end
