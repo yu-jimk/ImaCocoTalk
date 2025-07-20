@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
-import Form from "next/form";
+import { useRouter } from "next/navigation";
 
 import { MapPin, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,19 +11,74 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
-import { signupUser, type SignupFormState } from "./actions";
-
-const initialState: SignupFormState = {};
+type FormErrors = {
+  name?: string;
+  email?: string;
+  password?: string;
+  confirmPassword?: string;
+  terms?: string;
+  general?: string;
+};
 
 export default function SignupPage() {
-  const [state, formAction, pending] = useActionState(signupUser, initialState);
+  const router = useRouter();
+  const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [pending, setPending] = useState(false);
+
+  async function handleSubmit(formData: FormData) {
+    setPending(true);
+    setErrors({});
+
+    const name = formData.get("name")?.toString().trim() || "";
+    const email = formData.get("email")?.toString().trim() || "";
+    const password = formData.get("password")?.toString() || "";
+    const confirmPassword = formData.get("confirmPassword")?.toString() || "";
+    const agreeToTerms = formData.get("agreeToTerms") === "true";
+
+    const newErrors: FormErrors = {};
+    if (!name) newErrors.name = "名前は必須です";
+    if (!email) newErrors.email = "メールアドレスは必須です";
+    if (!password || password.length < 6)
+      newErrors.password = "パスワードは6文字以上で入力してください";
+    if (password !== confirmPassword)
+      newErrors.confirmPassword = "パスワードが一致しません";
+    if (!agreeToTerms)
+      newErrors.terms = "利用規約とプライバシーポリシーへの同意が必要です";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      setPending(false);
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/auth/signup", {
+        method: "POST",
+        body: JSON.stringify({ name, email, password }),
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setErrors({ general: data.message || "登録に失敗しました" });
+        setPending(false);
+        return;
+      }
+
+      router.push("/");
+    } catch (err) {
+      console.error(err);
+      setErrors({ general: "通信エラーが発生しました" });
+    }
+    setPending(false);
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md py-6">
-        {/* Header */}
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
             <div className="bg-blue-600 rounded-full p-3">
@@ -37,9 +92,7 @@ export default function SignupPage() {
         </CardHeader>
 
         <CardContent className="space-y-4">
-          {/* Form */}
-          <Form action={formAction} className="space-y-4">
-            {/* Name Field */}
+          <form action={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="name">
                 名前 <span className="text-red-500">*</span>
@@ -49,14 +102,13 @@ export default function SignupPage() {
                 name="name"
                 type="text"
                 placeholder="田中太郎"
-                className={state.errors?.name && "border-red-500"}
+                className={errors.name && "border-red-500"}
               />
-              {state.errors?.name && (
-                <p className="text-red-500 text-xs">{state.errors.name}</p>
+              {errors.name && (
+                <p className="text-red-500 text-xs">{errors.name}</p>
               )}
             </div>
 
-            {/* Email Field */}
             <div className="space-y-2">
               <Label htmlFor="email">
                 メールアドレス <span className="text-red-500">*</span>
@@ -66,14 +118,13 @@ export default function SignupPage() {
                 name="email"
                 type="email"
                 placeholder="example@email.com"
-                className={state.errors?.email && "border-red-500"}
+                className={errors.email && "border-red-500"}
               />
-              {state.errors?.email && (
-                <p className="text-red-500 text-xs">{state.errors.email}</p>
+              {errors.email && (
+                <p className="text-red-500 text-xs">{errors.email}</p>
               )}
             </div>
 
-            {/* Password Field */}
             <div className="space-y-2">
               <Label htmlFor="password">
                 パスワード <span className="text-red-500">*</span>
@@ -84,9 +135,7 @@ export default function SignupPage() {
                   name="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="6文字以上で入力"
-                  className={
-                    state.errors?.password ? "border-red-500 pr-10" : "pr-10"
-                  }
+                  className={errors.password ? "border-red-500 pr-10" : "pr-10"}
                 />
                 <Button
                   type="button"
@@ -102,12 +151,11 @@ export default function SignupPage() {
                   )}
                 </Button>
               </div>
-              {state.errors?.password && (
-                <p className="text-red-500 text-xs">{state.errors.password}</p>
+              {errors.password && (
+                <p className="text-red-500 text-xs">{errors.password}</p>
               )}
             </div>
 
-            {/* Confirm Password Field */}
             <div className="space-y-2">
               <Label htmlFor="confirmPassword">
                 パスワード確認 <span className="text-red-500">*</span>
@@ -119,9 +167,7 @@ export default function SignupPage() {
                   type={showConfirmPassword ? "text" : "password"}
                   placeholder="パスワードを再入力"
                   className={
-                    state.errors?.confirmPassword
-                      ? "border-red-500 pr-10"
-                      : "pr-10"
+                    errors.confirmPassword ? "border-red-500 pr-10" : "pr-10"
                   }
                 />
                 <Button
@@ -138,20 +184,17 @@ export default function SignupPage() {
                   )}
                 </Button>
               </div>
-              {state.errors?.confirmPassword && (
-                <p className="text-red-500 text-xs">
-                  {state.errors.confirmPassword}
-                </p>
+              {errors.confirmPassword && (
+                <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
               )}
             </div>
 
-            {/* Terms Checkbox */}
             <div className="space-y-2">
               <div className="flex items-start space-x-2">
                 <Checkbox
                   id="agreeToTerms"
                   name="agreeToTerms"
-                  className={state.errors?.terms && "border-red-500"}
+                  className={errors.terms && "border-red-500"}
                   value="true"
                 />
                 <div className="grid gap-1.5 leading-none">
@@ -176,18 +219,22 @@ export default function SignupPage() {
                   </Label>
                 </div>
               </div>
-              {state.errors?.terms && (
-                <p className="text-red-500 text-xs">{state.errors.terms}</p>
+              {errors.terms && (
+                <p className="text-red-500 text-xs">{errors.terms}</p>
               )}
             </div>
 
-            {/* Submit Button */}
+            {errors.general && (
+              <p className="text-red-500 text-sm text-center">
+                {errors.general}
+              </p>
+            )}
+
             <Button type="submit" className="w-full" disabled={pending}>
               {pending ? "登録中..." : "新規登録"}
             </Button>
-          </Form>
+          </form>
 
-          {/* Links */}
           <div className="text-center space-y-2">
             <p className="text-sm text-gray-600">
               すでにアカウントをお持ちですか？

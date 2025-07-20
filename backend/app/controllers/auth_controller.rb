@@ -32,7 +32,7 @@ class AuthController < BaseController
   private
 
   def signup_params
-    params.permit(:name, :email, :password, :password_confirmation)
+    params.fetch(:auth, params).permit(:name, :email, :password, :password_confirmation)
   end
 
   def set_jwt_cookie(token)
