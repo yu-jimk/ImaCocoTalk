@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 
 import { QrCode, MapPin, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,7 +8,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { CheckedInModal } from "./CheckedInModal";
 
-export default function CheckinPage() {
+export default function CheckinPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
   const [isScanning, setIsScanning] = useState(false);
   const [isCheckedIn, setIsCheckedIn] = useState(false);
 
@@ -27,7 +32,7 @@ export default function CheckinPage() {
   };
 
   if (isCheckedIn) {
-    return <CheckedInModal />;
+    return <CheckedInModal storeId={id} />;
   }
 
   return (

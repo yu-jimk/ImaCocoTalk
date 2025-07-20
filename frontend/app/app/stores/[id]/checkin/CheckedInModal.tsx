@@ -5,7 +5,7 @@ import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function CheckedInModal() {
+export function CheckedInModal({ storeId }: { storeId: string }) {
   // QRコードのモックアップ表示（実際の実装ではqrcode.jsなどを使用）
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
@@ -21,7 +21,7 @@ export function CheckedInModal() {
             カフェ・ド・パリにチェックインしました
           </p>
           <div className="space-y-3 flex flex-col gap-1">
-            <Link href="/posts/create">
+            <Link href={`/stores/${storeId}/posts/create`}>
               <Button className="w-full">投稿を作成する</Button>
             </Link>
             <Link href="/">

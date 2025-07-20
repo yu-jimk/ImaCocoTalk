@@ -15,10 +15,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Form from "next/form";
-import { StarRating } from "@/components/StarRating";
+import { StarRating } from "@//components/StarRating";
 import { createPostAction } from "./actions";
 
-export default function CreatePostPage() {
+export default function CreatePostPage({ params }: { params: { id: string } }) {
   const [rating, setRating] = useState(0);
 
   return (
@@ -81,6 +81,7 @@ export default function CreatePostPage() {
           <CardContent className="p-6">
             <Form action={createPostAction} className="space-y-6">
               <input type="hidden" name="rating" value={rating} />
+              <input type="hidden" name="store_id" value={params.id} />
 
               {/* Rating Section */}
               <div className="space-y-3">

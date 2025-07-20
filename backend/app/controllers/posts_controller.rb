@@ -9,6 +9,7 @@ class PostsController < BaseController
   # POST /posts
   def create
     @post = Post.new(post_params)
+    @post.user_id = current_user.id
 
     if @post.save
       render json: @post, status: :created, location: @post
