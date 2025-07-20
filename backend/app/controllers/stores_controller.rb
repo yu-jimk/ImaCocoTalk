@@ -2,6 +2,21 @@ class StoresController < BaseController
   before_action :set_store, only: %i[ show update posts]
 
   def nearby
+    lat = params[:lat].to_f
+    lng = params[:lng].to_f
+    radius = params[:radius] ? params[:radius].to_f : 5
+
+    @stores = Store.near([lat, lng], radius, units: :km)
+    @stores_with_distance = @stores.map do |store|
+      distance_km = Geocoder::Calculations.distance_between([lat, lng], [store.latitude, store.longitude])
+      store.define_singleton_method(:distance_m) { (distance_km * 1000).round }
+      store
+    end.sort_by(&:distance_m)
+
+    # ユニークなジャンル配列
+    @available_genres = @stores_with_distance.map(&:place_types).flatten.uniq
+
+    render "stores/nearby"
   end
 
   # GET /stores/1

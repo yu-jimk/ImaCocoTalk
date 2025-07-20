@@ -9,6 +9,9 @@ class Store < ApplicationRecord
   has_many :favorites, dependent: :destroy
   has_many :favorite_users, through: :favorites, source: :user
 
+  geocoded_by :address
+  after_validation :geocode, if: ->(obj){ obj.address.present? and obj.address_changed? }
+
   def average_rating
     posts.average(:rating).to_f.round(1) || 0.0
   end

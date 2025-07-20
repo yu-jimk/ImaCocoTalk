@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,110 +8,63 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Search, User, Pin } from "lucide-react";
 import Link from "next/link";
 
-// Mock data for stores with enhanced information
-const stores = [
-  {
-    id: 20,
-    name: "カフェ・ド・パリ",
-    genre: "カフェ",
-    distance: "50m",
-    posts: 12,
-    rating: 4.5,
-    lat: 35.6762,
-    lng: 139.6503,
-    isNew: true,
-    pinnedPost:
-      "【お知らせ】12月25日はクリスマス特別メニューをご用意しております！限定ケーキもございます。",
-  },
-  {
-    id: 2,
-    name: "らーめん太郎",
-    genre: "ラーメン",
-    distance: "120m",
-    posts: 8,
-    rating: 4.2,
-    lat: 35.6765,
-    lng: 139.651,
-    isNew: false,
-    pinnedPost: null,
-  },
-  {
-    id: 3,
-    name: "バー・ムーンライト",
-    genre: "バー",
-    distance: "200m",
-    posts: 15,
-    rating: 4.7,
-    lat: 35.676,
-    lng: 139.6495,
-    isNew: false,
-    pinnedPost: "【営業時間変更】12月は22時まで営業いたします。",
-  },
-  {
-    id: 4,
-    name: "イタリアン・ベラ",
-    genre: "イタリアン",
-    distance: "300m",
-    posts: 6,
-    rating: 4.0,
-    lat: 35.6758,
-    lng: 139.652,
-    isNew: true,
-    pinnedPost: null,
-  },
-  {
-    id: 5,
-    name: "スターバックス渋谷店",
-    genre: "カフェ",
-    distance: "150m",
-    posts: 25,
-    rating: 4.3,
-    lat: 35.677,
-    lng: 139.65,
-    isNew: false,
-    pinnedPost: null,
-  },
-  {
-    id: 6,
-    name: "焼肉キング",
-    genre: "焼肉",
-    distance: "250m",
-    posts: 18,
-    rating: 4.6,
-    lat: 35.6755,
-    lng: 139.6515,
-    isNew: false,
-    pinnedPost: null,
-  },
-];
-
-const genres = [
-  "すべて",
-  "カフェ",
-  "ラーメン",
-  "バー",
-  "イタリアン",
-  "和食",
-  "中華",
-  "焼肉",
-];
+type Store = {
+  id: number;
+  name: string;
+  genre: string[];
+  distance: string;
+  posts: number;
+  rating: number;
+  lat: number;
+  lng: number;
+  isNew: boolean;
+  pinnedPost: string | null;
+};
 
 export default function HomePage() {
   const [showSearch, setShowSearch] = useState(false);
-  const [selectedGenre, setSelectedGenre] = useState("すべて");
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStore, setSelectedStore] = useState<(typeof stores)[0] | null>(
-    null
-  );
+  const [selectedStore, setSelectedStore] = useState<Store | null>(null);
+  const [stores, setStores] = useState<Store[]>([]);
+  const [genres, setGenres] = useState<string[]>([]);
+  const [selectedGenre, setSelectedGenre] = useState("すべて");
+  const lat: number = 35.6762;
+  const lng: number = 139.6503;
+  const radius: number = 5;
+
+  // APIから近隣店舗取得
+  useEffect(() => {
+    async function fetchNearbyStores() {
+      try {
+        await fetch(
+          `http://localhost:3000/api/stores/nearby?lat=${lat}&lng=${lng}&radius=${radius}`,
+          {
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            setStores(data.stores || []);
+            setGenres(["すべて", ...data.available_genres]);
+          });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    fetchNearbyStores();
+  }, [lat, lng, radius]);
 
   // Filter stores based on genre and search query
   const filteredStores = stores.filter((store) => {
     const matchesGenre =
-      selectedGenre === "すべて" || store.genre === selectedGenre;
+      selectedGenre === "すべて" || store.genre.includes(selectedGenre);
     const matchesSearch =
       !searchQuery.trim() ||
       store.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      store.genre.toLowerCase().includes(searchQuery.toLowerCase());
+      store.genre.join(",").toLowerCase().includes(searchQuery.toLowerCase());
     return matchesGenre && matchesSearch;
   });
 
@@ -275,12 +228,17 @@ export default function HomePage() {
                     )}
                   </CardTitle>
                   <div className="flex items-center gap-2 mt-1">
-                    <Badge
-                      variant="secondary"
-                      className="text-blue-600 border-blue-200"
-                    >
-                      {selectedStore.genre}
-                    </Badge>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {selectedStore.genre.map((genre) => (
+                        <Badge
+                          key={genre}
+                          variant="secondary"
+                          className="text-blue-600 border-blue-200"
+                        >
+                          {genre}
+                        </Badge>
+                      ))}
+                    </div>
                     <span className="text-sm text-gray-500">
                       {selectedStore.distance}
                     </span>
