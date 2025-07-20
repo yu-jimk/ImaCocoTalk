@@ -8,10 +8,18 @@ class UsersController < BaseController
 
   # PATCH /users/me
   def update_me
+    if current_user.update(user_params)
+      render json: { message: 'プロフィールを更新しました' }
+    else
+      render json: { errors: current_user.errors.full_messages }, status: :unprocessable_entity
+    end
   end
 
   # DELETE /users/me
   def destroy_me
+    current_user.destroy!
+    cookies.delete(:user_jwt, domain: :all, path: '/')
+    head :no_content
   end
 
   # GET /users/me/posts
