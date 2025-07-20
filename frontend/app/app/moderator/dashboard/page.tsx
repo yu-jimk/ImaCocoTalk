@@ -6,27 +6,29 @@ import { PostsTab } from "./components/PostsTab";
 import { PinnedTab } from "./components/PinnedTab";
 import { SettingsTab } from "./components/SettingsTab";
 import { LogoutDialog } from "@/components/LogoutDialog";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
 // Mock data for moderator
-const storeInfo = {
-  id: 1,
-  name: "カフェ・ド・パリ",
-  genres: ["カフェ", "フレンチ", "デザート"],
-  description: "パリの雰囲気を楽しめる本格的なカフェです。",
-  postalCode: "150-0041",
-  address: "東京都渋谷区神南1-1-1",
-  openHours: "8:00 - 22:00",
-  phone: "03-1234-5678",
-  otherInfo: ["WiFi完備", "電源あり", "禁煙", "テイクアウト可"],
-  totalPosts: 45,
-  totalReports: 3,
-  monthlyVisitors: 234,
-  qrCodeValue: "https://imacoco-talk.com/checkin/cafe-de-paris",
-};
+// const storeInfo = {
+//   id: "1",
+//   name: "カフェ・ド・パリ",
+//   genres: ["カフェ", "フレンチ", "デザート"],
+//   description: "パリの雰囲気を楽しめる本格的なカフェです。",
+//   postalCode: "150-0041",
+//   address: "東京都渋谷区神南1-1-1",
+//   openHours: "8:00 - 22:00",
+//   phone: "03-1234-5678",
+//   otherInfo: ["WiFi完備", "電源あり", "禁煙", "テイクアウト可"],
+//   totalPosts: 45,
+//   totalReports: 3,
+//   monthlyVisitors: 234,
+//   qrCodeValue: "https://imacoco-talk.com/checkin/cafe-de-paris",
+// };
 
 const reportedPosts = [
   {
-    id: 1,
+    id: "1",
     user: { name: "匿名ユーザー", avatar: "" },
     content: "この店のサービスは最悪でした。二度と行きません。",
     timestamp: "2時間前",
@@ -36,7 +38,7 @@ const reportedPosts = [
     rating: 1.0,
   },
   {
-    id: 2,
+    id: "2",
     user: { name: "田中太郎", avatar: "" },
     content: "スタッフの態度が悪い。改善してほしい。",
     timestamp: "5時間前",
@@ -49,7 +51,7 @@ const reportedPosts = [
 
 const allPosts = [
   {
-    id: 3,
+    id: "3",
     user: { name: "佐藤花子", avatar: "" },
     content:
       "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
@@ -64,7 +66,7 @@ const allPosts = [
     },
   },
   {
-    id: 4,
+    id: "4",
     user: { name: "山田次郎", avatar: "" },
     content: "パンケーキが絶品でした🥞 また来たいと思います！",
     timestamp: "2日前",
@@ -81,21 +83,36 @@ const allPosts = [
 
 const pinnedPosts = [
   {
-    id: 5,
+    id: "5",
     content:
       "【お知らせ】12月25日はクリスマス特別メニューをご用意しております！",
     timestamp: "3日前",
     isPinned: true,
   },
   {
-    id: 6,
+    id: "6",
     content: "【営業時間変更】12月は22時まで営業いたします。",
     timestamp: "1週間前",
     isPinned: true,
   },
 ];
 
-export default function ModeratorPage() {
+export default async function ModeratorPage() {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("moderator_jwt")?.value;
+
+  const storeRes = await fetch(
+    `http://backend:3000/api/moderator/dashboard/summary`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `moderator_jwt=${cookieHeader}`,
+      },
+    }
+  );
+  if (!storeRes.ok) return notFound();
+  const storeInfo = await storeRes.json();
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -108,7 +125,7 @@ export default function ModeratorPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-orange-500 text-white">店舗運営者</Badge>
-            <LogoutDialog redirectUrl="/moderator/login" />
+            <LogoutDialog />
           </div>
         </div>
       </div>

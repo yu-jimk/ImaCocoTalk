@@ -4,6 +4,7 @@ class Store < ApplicationRecord
 
   has_many :moderators, dependent: :destroy
   has_many :posts, dependent: :destroy
+  has_many :reports, through: :posts
   has_many :check_ins, dependent: :destroy
   has_many :announcements, dependent: :destroy
   has_many :favorites, dependent: :destroy
