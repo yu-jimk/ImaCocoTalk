@@ -1,13 +1,27 @@
 "use server";
 
-export async function submitDelete(postId: string) {
-  if (!postId) {
-    throw new Error("postIdが不正です");
+import { revalidatePath } from "next/cache";
+import { cookies } from "next/headers";
+
+export async function DeletePostAction(formData: FormData) {
+  const postId = formData.get("postId")?.toString();
+
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("user_jwt")?.value;
+
+  const res = await fetch(`http://backend:3000/api/posts/${postId}`, {
+    method: "DELETE",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `user_jwt=${cookieHeader}`,
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error("削除に失敗しました");
   }
 
-  // TODO: 認可チェック（必要なら）
-  // TODO: 実際の削除処理（DBからの削除など）
-  console.log("削除対象の投稿ID:", postId);
-
-  // 成功時は何も返さずOK
+  // /me に戻したい or 再取得させたいページをキャッシュリセット
+  revalidatePath("/me");
 }

@@ -1,6 +1,3 @@
-"use client";
-
-import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { submitDelete } from "./actions";
+import { DeletePostAction } from "./actions";
 
 type DeleteDialogProps = {
   postId: string;
@@ -23,20 +20,6 @@ export function DeleteDialog({
   isDeleteDialogOpen,
   setDeleteDialogOpen,
 }: DeleteDialogProps) {
-  const [isPending, startTransition] = useTransition();
-
-  const handleDelete = () => {
-    startTransition(async () => {
-      try {
-        await submitDelete(postId);
-        alert("投稿を削除しました");
-        setDeleteDialogOpen(false);
-      } catch (e) {
-        alert(e);
-      }
-    });
-  };
-
   return (
     <Dialog open={isDeleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
       <DialogContent>
@@ -46,18 +29,21 @@ export function DeleteDialog({
             この操作は取り消すことができません。投稿とそのコメントがすべて削除されます。
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>
-            キャンセル
-          </Button>
-          <Button
-            variant="destructive"
-            onClick={handleDelete}
-            disabled={isPending}
-          >
-            {isPending ? "削除中..." : "削除"}
-          </Button>
-        </DialogFooter>
+        <form action={DeletePostAction}>
+          <input type="hidden" name="postId" value={postId} />
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteDialogOpen(false)}
+              type="button"
+            >
+              キャンセル
+            </Button>
+            <Button variant="destructive" type="submit">
+              削除
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );
