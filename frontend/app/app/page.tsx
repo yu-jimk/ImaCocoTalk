@@ -7,6 +7,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Search, User, Pin } from "lucide-react";
 import Link from "next/link";
+import { Tabs } from "@/components/ui/tabs";
+import { motion, AnimatePresence } from "framer-motion";
 
 type Store = {
   id: number;
@@ -18,7 +20,7 @@ type Store = {
   lat: number;
   lng: number;
   isNew: boolean;
-  pinnedPost: string | null;
+  pinnedPosts: string[];
 };
 
 export default function HomePage() {
@@ -28,6 +30,7 @@ export default function HomePage() {
   const [stores, setStores] = useState<Store[]>([]);
   const [genres, setGenres] = useState<string[]>([]);
   const [selectedGenre, setSelectedGenre] = useState("すべて");
+  const [activeTab, setActiveTab] = useState("0");
   const lat: number = 35.6762;
   const lng: number = 139.6503;
   const radius: number = 5;
@@ -56,6 +59,20 @@ export default function HomePage() {
     }
     fetchNearbyStores();
   }, [lat, lng, radius]);
+
+  useEffect(() => {
+    if (!selectedStore) return;
+
+    const interval = setInterval(() => {
+      setActiveTab((prev) => {
+        const next =
+          (parseInt(prev, 10) + 1) % selectedStore.pinnedPosts.length;
+        return next.toString();
+      });
+    }, 5000); // 5秒ごとに切り替え
+
+    return () => clearInterval(interval);
+  }, [selectedStore]);
 
   // Filter stores based on genre and search query
   const filteredStores = stores.filter((store) => {
@@ -256,19 +273,36 @@ export default function HomePage() {
             </CardHeader>
             <CardContent>
               {/* Pinned Post */}
-              {selectedStore.pinnedPost && (
-                <div className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Pin className="h-4 w-4 text-yellow-600" />
-                    <span className="text-sm font-medium text-yellow-800">
-                      店舗からのお知らせ
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-700">
-                    {selectedStore.pinnedPost}
-                  </p>
-                </div>
-              )}
+              <Tabs
+                value={activeTab}
+                onValueChange={setActiveTab}
+                className="w-full max-w-md"
+              >
+                <AnimatePresence mode="wait">
+                  {selectedStore.pinnedPosts.map((post, idx) =>
+                    idx.toString() === activeTab ? (
+                      <motion.div
+                        key={idx}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        transition={{ duration: 0.3 }}
+                        className="mb-4 p-3 bg-yellow-50 border-l-4 border-yellow-400 rounded"
+                      >
+                        <div className="flex items-center gap-2 mb-1">
+                          <Pin className="h-4 w-4 text-yellow-600" />
+                          <span className="text-sm font-medium text-yellow-800">
+                            店舗からのお知らせ
+                          </span>
+                        </div>
+                        <div className="list-disc list-inside space-y-1">
+                          <p className="text-sm text-gray-700">{post}</p>
+                        </div>
+                      </motion.div>
+                    ) : null
+                  )}
+                </AnimatePresence>
+              </Tabs>
 
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">

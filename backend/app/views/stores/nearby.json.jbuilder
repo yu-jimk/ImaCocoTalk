@@ -8,7 +8,7 @@ json.stores @stores_with_distance do |store|
   json.lat store.latitude
   json.lng store.longitude
   json.isNew store.created_at > 7.days.ago
-  json.pinnedPost store.announcements.order(updated_at: :desc).first&.content
+  json.pinnedPosts store.announcements.order(updated_at: :desc).map(&:content)
 end
 
 json.available_genres @available_genres
