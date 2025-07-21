@@ -4,7 +4,7 @@
   json.description @store.description
   json.postalCode @store.postal_code
   json.address @store.address
-  json.openHours @store.today_open_hours
+  json.openHours @store.opening_hours || []
   json.phone @store.phone_number
   json.otherInfo @store.other_info || []
   json.totalPosts @total_posts
