@@ -21,77 +21,38 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  createPinnedAction,
+  updatePinnedAction,
+  deletePinnedAction,
+} from "./actions";
 
 type PinnedPost = {
-  id: number;
+  id: string;
   content: string;
-  timestamp: string;
-  isPinned: boolean;
 };
 
 type PinnedTabProps = {
   pinnedPosts: PinnedPost[];
 };
 
-export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
-  const [pinnedPosts, setPinnedPosts] = useState(initialPinnedPosts);
-  const [newPinnedPost, setNewPinnedPost] = useState("");
-  const [editingPinnedPost, setEditingPinnedPost] = useState<number | null>(
+export function PinnedTab({ pinnedPosts }: PinnedTabProps) {
+  const [editingPinnedPost, setEditingPinnedPost] = useState<string | null>(
     null
   );
   const [editPinnedContent, setEditPinnedContent] = useState("");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
+  const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
 
-  const handleCreatePinnedPost = () => {
-    if (newPinnedPost.trim()) {
-      const newPost = {
-        id: Date.now(),
-        content: newPinnedPost,
-        timestamp: "今",
-        isPinned: true,
-      };
-      setPinnedPosts([newPost, ...pinnedPosts]);
-      setNewPinnedPost("");
-      // API連携等はここで
-    }
-  };
-
-  const handleEditPinnedPost = (postId: number, content: string) => {
+  const handleEditPinnedPost = (postId: string, content: string) => {
     setEditingPinnedPost(postId);
     setEditPinnedContent(content);
   };
 
-  const handleSavePinnedPost = () => {
-    if (editingPinnedPost && editPinnedContent.trim()) {
-      setPinnedPosts((prev) =>
-        prev.map((post) =>
-          post.id === editingPinnedPost
-            ? { ...post, content: editPinnedContent }
-            : post
-        )
-      );
-      setEditingPinnedPost(null);
-      setEditPinnedContent("");
-      // API連携等はここで
-    }
-  };
-
   // 削除ボタン押下時
-  const handleDeletePinnedPost = (postId: number) => {
+  const handleDeletePinnedPost = (postId: string) => {
     setSelectedItemId(postId);
     setDeleteDialogOpen(true);
-  };
-
-  // ダイアログで削除確定時
-  const confirmDelete = () => {
-    if (selectedItemId) {
-      setPinnedPosts((prev) =>
-        prev.filter((post) => post.id !== selectedItemId)
-      );
-      setDeleteDialogOpen(false);
-      setSelectedItemId(null);
-    }
   };
 
   return (
@@ -108,22 +69,20 @@ export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Textarea
-            placeholder="お客様へのお知らせを入力してください..."
-            value={newPinnedPost}
-            onChange={(e) => setNewPinnedPost(e.target.value)}
-            rows={3}
-          />
-          <Button
-            onClick={handleCreatePinnedPost}
-            disabled={!newPinnedPost.trim()}
-            className="bg-green-500 hover:bg-green-600"
-          >
-            <Pin className="h-4 w-4 mr-2" />
-            固定投稿を作成
-          </Button>
+          <form action={createPinnedAction} className="space-y-4">
+            <Textarea
+              placeholder="お客様へのお知らせを入力してください..."
+              name="content"
+              rows={3}
+            />
+            <Button type="submit" className="bg-green-500 hover:bg-green-600">
+              <Pin className="h-4 w-4 mr-2" />
+              固定投稿を作成
+            </Button>
+          </form>
         </CardContent>
       </Card>
+
       {/* Existing Pinned Posts */}
       {pinnedPosts.map((post) => (
         <Card
@@ -138,21 +97,23 @@ export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
                   <Badge className="bg-yellow-500 text-white text-xs">
                     固定投稿
                   </Badge>
-                  <span className="text-xs text-gray-500">
-                    {post.timestamp}
-                  </span>
                 </div>
                 {editingPinnedPost === post.id ? (
-                  <div className="space-y-2">
+                  <form
+                    action={updatePinnedAction.bind(null, post.id)}
+                    className="space-y-2"
+                    onSubmit={() => setEditingPinnedPost(null)}
+                  >
                     <Textarea
                       value={editPinnedContent}
                       onChange={(e) => setEditPinnedContent(e.target.value)}
+                      name="content"
                       rows={3}
                     />
                     <div className="flex gap-2">
                       <Button
                         size="sm"
-                        onClick={handleSavePinnedPost}
+                        type="submit"
                         className="bg-blue-500 hover:bg-blue-600"
                       >
                         保存
@@ -165,7 +126,7 @@ export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
                         キャンセル
                       </Button>
                     </div>
-                  </div>
+                  </form>
                 ) : (
                   <p className="text-sm text-gray-700">{post.content}</p>
                 )}
@@ -201,6 +162,7 @@ export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
           </CardContent>
         </Card>
       ))}
+
       {/* Delete Confirmation Dialog */}
       <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <DialogContent>
@@ -217,9 +179,14 @@ export function PinnedTab({ pinnedPosts: initialPinnedPosts }: PinnedTabProps) {
             >
               キャンセル
             </Button>
-            <Button variant="destructive" onClick={confirmDelete}>
-              削除
-            </Button>
+            <form
+              action={deletePinnedAction.bind(null, selectedItemId!)}
+              onSubmit={() => setDeleteDialogOpen(false)}
+            >
+              <Button variant="destructive" type="submit">
+                削除
+              </Button>
+            </form>
           </DialogFooter>
         </DialogContent>
       </Dialog>

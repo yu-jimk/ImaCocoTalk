@@ -46,3 +46,55 @@ export async function approveReportedPostAction(postId: string) {
 
   revalidatePath("/moderator/dashboard");
 }
+
+export async function createPinnedAction(data: FormData) {
+  const content = data.get("content")?.toString();
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("moderator_jwt")?.value;
+  await fetch(`http://backend:3000/api/moderator/announcements`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `moderator_jwt=${cookieHeader}`,
+    },
+    credentials: "include",
+    body: JSON.stringify({ content }),
+  });
+
+  revalidatePath("/moderator/dashboard");
+}
+
+export async function updatePinnedAction(id: string, formData: FormData) {
+  const content = formData.get("content");
+  if (!content || typeof content !== "string") return;
+
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("moderator_jwt")?.value;
+
+  await fetch(`http://backend:3000/api/moderator/announcements/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `moderator_jwt=${cookieHeader}`,
+    },
+    credentials: "include",
+    body: JSON.stringify({ content }),
+  });
+
+  revalidatePath("/moderator/dashboard");
+}
+
+export async function deletePinnedAction(id: string) {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("moderator_jwt")?.value;
+
+  await fetch(`http://backend:3000/api/moderator/announcements/${id}`, {
+    method: "DELETE",
+    headers: {
+      Cookie: `moderator_jwt=${cookieHeader}`,
+    },
+    credentials: "include",
+  });
+
+  revalidatePath("/moderator/dashboard");
+}
