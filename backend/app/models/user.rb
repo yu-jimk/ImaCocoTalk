@@ -43,4 +43,8 @@ class User < ApplicationRecord
   def liked_posts_count
     liked_posts.count
   end
+
+  def recently_checked_in_to?(store_id)
+    check_ins.where(store_id: store_id).where('created_at >= ?', 30.minutes.ago).exists?
+  end
 end
