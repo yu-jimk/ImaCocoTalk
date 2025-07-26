@@ -32,7 +32,7 @@ export default function CreatePostPage({
       <div className="bg-white border-b border-blue-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/stores/1">
+            <Link href={`/stores/${id}`}>
               <Button
                 variant="ghost"
                 size="icon"
