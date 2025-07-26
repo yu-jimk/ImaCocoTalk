@@ -68,7 +68,7 @@ export function PostCard({
                   </span>
                 </div>
                 {/* ケバブメニュー 右寄せ */}
-                {showDeleteMenu && showEditMenu && showReportMenu && (
+                {(showDeleteMenu || showEditMenu || showReportMenu) && (
                   <div className="ml-auto">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
