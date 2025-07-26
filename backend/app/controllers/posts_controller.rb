@@ -25,6 +25,11 @@ class PostsController < BaseController
 
   # PATCH/PUT /posts/1
   def update
+    unless current_user.recently_checked_in_to?(@post.store_id)
+      render json: { error: "この店舗にはチェックインしていません（または有効期限切れ）" }, status: :forbidden
+      return
+    end
+
     if @post.update(post_params)
       render json: @post
     else
