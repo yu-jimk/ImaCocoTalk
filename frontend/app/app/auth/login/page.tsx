@@ -29,6 +29,18 @@ export default function LoginPage() {
     router.push("/");
   }
 
+  async function handleGuestLogin() {
+    const res = await fetch("http://localhost:3000/api/auth/guest_login", {
+      method: "POST",
+      credentials: "include",
+    });
+    if (!res.ok) {
+      alert("ゲストログイン失敗");
+      return;
+    }
+    router.push("/");
+  }
+
   const router = useRouter();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -88,11 +100,13 @@ export default function LoginPage() {
           </div>
 
           <div className="pt-4 border-t">
-            <Link href="/">
-              <Button variant="outline" className="w-full bg-transparent">
-                ゲストログイン
-              </Button>
-            </Link>
+            <Button
+              onClick={handleGuestLogin}
+              variant="outline"
+              className="w-full bg-transparent"
+            >
+              ゲストログイン
+            </Button>
           </div>
         </CardContent>
       </Card>

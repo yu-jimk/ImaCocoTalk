@@ -29,6 +29,22 @@ export default function ModeratorLoginPage() {
     }
     router.push("/moderator/dashboard");
   }
+
+  async function handleGuestLogin() {
+    const res = await fetch(
+      "http://localhost:3000/api/moderator/auth/guest_login",
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+    if (!res.ok) {
+      alert("ゲストログイン失敗");
+      return;
+    }
+    router.push("/moderator/dashboard");
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md py-6">
@@ -83,11 +99,13 @@ export default function ModeratorLoginPage() {
           </div>
 
           <div className="pt-4 border-t">
-            <Link href="/moderator/dashboard">
-              <Button variant="outline" className="w-full bg-transparent">
-                ゲストログイン
-              </Button>
-            </Link>
+            <Button
+              onClick={handleGuestLogin}
+              variant="outline"
+              className="w-full bg-transparent"
+            >
+              ゲストログイン
+            </Button>
           </div>
         </CardContent>
       </Card>

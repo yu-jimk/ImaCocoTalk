@@ -1,6 +1,6 @@
 # app/controllers/auth_controller.rb
 class AuthController < BaseController
-  skip_before_action :authenticate_user!, only: [:signup, :login]
+  skip_before_action :authenticate_user!, only: [:signup, :login, :guest_login]
 
   def signup
     user = User.new(signup_params)
@@ -22,6 +22,19 @@ class AuthController < BaseController
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
+  end
+
+  def guest_login
+    user = User.find_by(email: 't-yamada@example.com')
+
+    unless user
+      render json: { error: 'ゲストユーザーが存在しません' }, status: :not_found and return
+    end
+
+    token = JsonWebToken.encode(user_id: user.id)
+    set_jwt_cookie(token)
+
+    render json: { user: user.as_json(except: [:password_digest]) }, status: :ok
   end
 
   def logout

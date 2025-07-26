@@ -1,5 +1,5 @@
 class Moderator::AuthController < Moderator::BaseController
-  skip_before_action :authenticate_moderator!, only: [:login]
+  skip_before_action :authenticate_moderator!, only: [:login, :guest_login]
 
   def login
     moderator = Moderator.find_by(email: params[:email])
@@ -10,6 +10,19 @@ class Moderator::AuthController < Moderator::BaseController
     else
       render json: { error: 'Invalid email or password' }, status: :unauthorized
     end
+  end
+
+  def guest_login
+    moderator = Moderator.find_by(email: 't-yamada@example.com')
+
+    unless moderator
+      render json: { error: 'ゲストユーザーが存在しません' }, status: :not_found and return
+    end
+
+    token = JsonWebToken.encode(moderator_id: moderator.id)
+    set_jwt_cookie(token)
+
+    render json: { moderator: moderator.as_json(except: [:password_digest]) }, status: :ok
   end
 
   def logout

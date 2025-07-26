@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     # 認証
     post "auth/signup", to: "auth#signup"
     post "auth/login",  to: "auth#login"
+    post "auth/guest_login",  to: "auth#guest_login"
     delete "auth/logout", to: "auth#logout"
 
     # ユーザー
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
     get "stores/nearby", to: "stores#nearby"
     get "stores/:id",    to: "stores#show"
     get "stores/:id/posts", to: "stores#posts"
+    
 
     # 投稿
     resources :posts, only: [:create, :show, :update, :destroy] do
@@ -29,16 +31,17 @@ Rails.application.routes.draw do
     post "favorites/toggle",  to: "favorites#toggle"
 
     # チェックイン
-    post "check_ins/validate", to: "check_ins#validate"
+    get "check_ins/valid", to: "check_ins#valid"
     resources :check_ins, only: [:create]
 
     # モデレーター
     namespace :moderator do
       post 'auth/login', to: 'auth#login'
+      post "auth/guest_login",  to: "auth#guest_login"
       delete 'auth/logout', to: 'auth#logout'
 
       get "dashboard/summary", to: "dashboard#summary"
-      get "store/qrcode",      to: "store#qrcode"
+      get "store/:id/check_in_qr", to: "store#check_in_qr"
       get "store",             to: "store#show"
       patch "store",           to: "store#update"
       get "store/posts",       to: "store#posts"
