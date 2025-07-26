@@ -11,6 +11,11 @@ class PostsController < BaseController
     @post = Post.new(post_params)
     @post.user_id = current_user.id
 
+    unless current_user.recently_checked_in_to?(@post.store_id)
+      render json: { error: "この店舗にはチェックインしていません（または有効期限切れ）" }, status: :forbidden
+      return
+    end
+
     if @post.save
       render json: @post, status: :created, location: @post
     else
