@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_07_11_102013) do
+ActiveRecord::Schema[7.1].define(version: 2025_07_26_060425) do
   create_table "announcements", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.bigint "store_id", null: false
     t.text "content", null: false
@@ -24,7 +24,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_07_11_102013) do
     t.bigint "store_id", null: false
     t.decimal "latitude", precision: 10, scale: 7
     t.decimal "longitude", precision: 10, scale: 7
-    t.string "qr_token", limit: 64, null: false
+    t.string "qr_token", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["store_id"], name: "index_check_ins_on_store_id"

@@ -16,8 +16,16 @@ class Moderator::StoreController < Moderator::BaseController
     end
   end
 
-  def qrcode
-    # チェックインQR表示
+  def check_in_qr
+    store = Store.find(params[:id])
+    token = CheckinQrTokenService.issue(store.id)
+
+    # QRコードを生成（rqrcode gem）
+    qr = RQRCode::QRCode.new(token)
+    png = qr.as_png(size: 200)
+
+    # レスポンスはPNG画像を直接返す
+    send_data png.to_s, type: 'image/png', disposition: 'inline'
   end
 
   def posts

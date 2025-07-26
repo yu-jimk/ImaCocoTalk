@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   MessageCircle,
@@ -10,23 +10,45 @@ import {
   QrCode,
   Settings,
 } from "lucide-react";
-import { QRCode } from "@/components/QrCode";
 import { QrCodeDialog } from "@/components/QrCodeDialog";
+import Image from "next/image";
 
 export type StoreInfo = {
+  id: string;
   name: string;
   totalPosts: number;
   totalReports: number;
   monthlyVisitors: number;
-  qrCodeValue: string;
 };
 
 export function DashboardOverview({ storeInfo }: { storeInfo: StoreInfo }) {
+  const [qrUrl, setQrUrl] = useState<string | null>(null);
   const [qrDialogOpen, setQrDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchQrCode = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:3000/api/moderator/store/${storeInfo.id}/check_in_qr`,
+          {
+            credentials: "include",
+          }
+        );
+        if (!res.ok) throw new Error("Failed to fetch QR code image");
+        const blob = await res.blob();
+        const url = URL.createObjectURL(blob);
+        setQrUrl(url);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchQrCode();
+  }, [storeInfo.id]);
+
   return (
     <>
       <div className="flex flex-col lg:flex-row gap-4 md:gap-6 mb-6 min-h-60">
-        {/* 統計情報カード */}
         <Card className="bg-white py-4 md:py-6 flex-1 h-full">
           <CardHeader>
             <CardTitle className="flex items-center gap-1 sm:gap-2 text-orange-700 text-base sm:text-xl md:text-2xl whitespace-nowrap truncate">
@@ -78,8 +100,7 @@ export function DashboardOverview({ storeInfo }: { storeInfo: StoreInfo }) {
           </CardContent>
         </Card>
 
-        {/* QRコードカード */}
-        <Card className="bg-white  py-4 md:py-6 flex-1 flex flex-col">
+        <Card className="bg-white py-4 md:py-6 flex-1 flex flex-col">
           <CardHeader className="flex flex-col items-center justify-center">
             <CardTitle className="flex items-center gap-1 sm:gap-2 text-gray-700 text-base sm:text-lg md:text-xl whitespace-nowrap justify-center text-center">
               <QrCode className="h-5 w-5 min-w-5 min-h-5" />
@@ -87,26 +108,36 @@ export function DashboardOverview({ storeInfo }: { storeInfo: StoreInfo }) {
             </CardTitle>
           </CardHeader>
           <CardContent className="flex-1 flex flex-col items-center justify-center">
-            <div
-              className="cursor-pointer transition-transform hover:scale-105"
-              onClick={() => setQrDialogOpen(true)}
-              tabIndex={0}
-              role="button"
-              aria-label="QRコードを拡大表示"
-            >
-              <QRCode value={storeInfo.qrCodeValue} size={200} />
-              <div className="mt-4 text-xs text-gray-500 flex justify-center items-center">
-                クリックで拡大表示
+            {qrUrl ? (
+              <div
+                className="cursor-pointer transition-transform hover:scale-105"
+                onClick={() => setQrDialogOpen(true)}
+                tabIndex={0}
+                role="button"
+                aria-label="QRコードを拡大表示"
+              >
+                <Image
+                  src={qrUrl}
+                  alt="QR Code"
+                  width={200}
+                  height={200}
+                  unoptimized
+                />
+                <div className="mt-4 text-xs text-gray-500 flex justify-center items-center">
+                  クリックで拡大表示
+                </div>
               </div>
-            </div>
+            ) : (
+              <p>読み込み中...</p>
+            )}
           </CardContent>
         </Card>
       </div>
-      {/* Logout Confirmation Dialog */}
+
       <QrCodeDialog
         open={qrDialogOpen}
         onOpenChange={setQrDialogOpen}
-        value={storeInfo.qrCodeValue}
+        value={qrUrl || ""}
       />
     </>
   );
