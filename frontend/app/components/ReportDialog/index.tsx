@@ -27,7 +27,7 @@ const reportReasons = [
 ];
 
 type ReportDialogProps = {
-  postId: number;
+  postId: string;
   isReportDialogOpen: boolean;
   setReportDialogOpen: (open: boolean) => void;
 };

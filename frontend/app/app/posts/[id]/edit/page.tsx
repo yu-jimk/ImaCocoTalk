@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { StarRating } from "@/components/StarRating";
 import {
   ArrowLeft,
-  MapPin,
+  //   MapPin,
   CheckCircle,
   Star,
   Save,
@@ -16,23 +16,38 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Form from "next/form";
+import { notFound } from "next/navigation";
 import { editPostAction } from "./actions";
+import type { Post } from "@/app/types";
 
-const tweetData = {
-  id: 1,
-  store: {
-    name: "カフェ・ド・パリ",
-    genre: "カフェ",
-    address: "東京都渋谷区神南1-1-1",
-  },
-  content:
-    "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。WiFiも快適で電源もあるので、ノマドワークにもおすすめです。",
-  rating: 4.5,
-  timestamp: "2時間前",
-};
+export default function EditPostPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
+  const [post, setPost] = useState<Post | null>(null);
+  const [rating, setRating] = useState<number>(0);
+  const [content, setContent] = useState<string>("");
 
-export default function EditPostPage() {
-  const [rating, setRating] = useState(tweetData.rating);
+  useEffect(() => {
+    const fetchPost = async () => {
+      const postRes = await fetch(`http://localhost:3000/api/posts/${id}`, {
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!postRes.ok) return notFound();
+      const post: Post = await postRes.json();
+      setPost(post);
+      setRating(post.rating);
+      setContent(post.content);
+    };
+    fetchPost();
+  }, [id]);
+
+  if (!post) return null;
 
   return (
     <div className="min-h-screen bg-blue-50">
@@ -68,16 +83,16 @@ export default function EditPostPage() {
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <span className="font-medium text-blue-900">
-                    {tweetData.store.name}
+                    {post.store.name}
                   </span>
                   <Badge className="bg-green-500 text-white text-xs font-bold rounded-full">
                     チェックイン済み
                   </Badge>
                 </div>
-                <div className="flex items-center gap-1 text-sm text-blue-600">
+                {/* <div className="flex items-center gap-1 text-sm text-blue-600">
                   <MapPin className="h-3 w-3" />
-                  {tweetData.store.address}
-                </div>
+                  東京都渋谷区神南1-1-1
+                </div> */}
               </div>
             </div>
           </CardContent>
@@ -93,6 +108,7 @@ export default function EditPostPage() {
           </CardHeader>
           <CardContent className="p-6">
             <Form action={editPostAction} className="space-y-6">
+              <input type="hidden" name="id" value={id} />
               <input type="hidden" name="rating" value={rating} />
 
               {/* Rating Section */}
@@ -130,7 +146,7 @@ export default function EditPostPage() {
                 <Textarea
                   name="content"
                   placeholder="この店舗での体験や感想を詳しく教えてください"
-                  defaultValue={tweetData.content}
+                  defaultValue={content}
                   rows={8}
                   className="resize-none border-blue-200 focus:border-blue-400 bg-blue-50/30"
                   required
@@ -141,7 +157,7 @@ export default function EditPostPage() {
               <div className="flex gap-3 pt-4 border-t border-blue-100">
                 <Button
                   type="submit"
-                  disabled={!tweetData.content.trim() || rating === 0}
+                  disabled={!post.content.trim() || rating === 0}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-medium py-3"
                 >
                   <Save className="h-4 w-4 mr-2" />
@@ -169,7 +185,7 @@ export default function EditPostPage() {
             </h3>
             <div className="text-sm text-gray-600 space-y-2">
               <p>
-                <strong>投稿日時:</strong> {tweetData.timestamp}
+                <strong>投稿日時:</strong> {post.timestamp}
               </p>
               <div className="bg-blue-50 p-3 rounded-lg">
                 <p className="text-xs text-blue-600">

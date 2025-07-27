@@ -6,96 +6,59 @@ import { PostsTab } from "./components/PostsTab";
 import { PinnedTab } from "./components/PinnedTab";
 import { SettingsTab } from "./components/SettingsTab";
 import { LogoutDialog } from "@/components/LogoutDialog";
+import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 
-// Mock data for moderator
-const storeInfo = {
-  id: 1,
-  name: "カフェ・ド・パリ",
-  genres: ["カフェ", "フレンチ", "デザート"],
-  description: "パリの雰囲気を楽しめる本格的なカフェです。",
-  postalCode: "150-0041",
-  address: "東京都渋谷区神南1-1-1",
-  openHours: "8:00 - 22:00",
-  phone: "03-1234-5678",
-  otherInfo: ["WiFi完備", "電源あり", "禁煙", "テイクアウト可"],
-  totalPosts: 45,
-  totalReports: 3,
-  monthlyVisitors: 234,
-  qrCodeValue: "https://imacoco-talk.com/checkin/cafe-de-paris",
-};
+export default async function ModeratorPage() {
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("moderator_jwt")?.value;
 
-const reportedPosts = [
-  {
-    id: 1,
-    user: { name: "匿名ユーザー", avatar: "" },
-    content: "この店のサービスは最悪でした。二度と行きません。",
-    timestamp: "2時間前",
-    reports: 3,
-    reportReasons: ["不適切な内容", "誹謗中傷"],
-    status: "pending",
-    rating: 1.0,
-  },
-  {
-    id: 2,
-    user: { name: "田中太郎", avatar: "" },
-    content: "スタッフの態度が悪い。改善してほしい。",
-    timestamp: "5時間前",
-    reports: 1,
-    reportReasons: ["不適切な内容"],
-    status: "pending",
-    rating: 2.0,
-  },
-];
+  const storeRes = await fetch(
+    `http://backend:3000/api/moderator/dashboard/summary`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `moderator_jwt=${cookieHeader}`,
+      },
+    }
+  );
+  if (!storeRes.ok) return notFound();
+  const storeInfo = await storeRes.json();
 
-const allPosts = [
-  {
-    id: 3,
-    user: { name: "佐藤花子", avatar: "" },
-    content:
-      "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。",
-    timestamp: "1日前",
-    likes: 12,
-    isLiked: false,
-    comments: 3,
-    status: "approved",
-    rating: 4.5,
-    store: {
-      name: "カフェ・ド・パリ",
+  const reportRes = await fetch(`http://backend:3000/api/moderator/reports`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `moderator_jwt=${cookieHeader}`,
     },
-  },
-  {
-    id: 4,
-    user: { name: "山田次郎", avatar: "" },
-    content: "パンケーキが絶品でした🥞 また来たいと思います！",
-    timestamp: "2日前",
-    likes: 8,
-    isLiked: false,
-    comments: 1,
-    status: "approved",
-    rating: 4.0,
-    store: {
-      name: "カフェ・ド・パリ",
+  });
+  if (!reportRes.ok) return notFound();
+  const reportedPosts = await reportRes.json();
+
+  const postRes = await fetch(`http://backend:3000/api/moderator/store/posts`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `moderator_jwt=${cookieHeader}`,
     },
-  },
-];
+  });
+  if (!postRes.ok) return notFound();
+  const allPosts = await postRes.json();
 
-const pinnedPosts = [
-  {
-    id: 5,
-    content:
-      "【お知らせ】12月25日はクリスマス特別メニューをご用意しております！",
-    timestamp: "3日前",
-    isPinned: true,
-  },
-  {
-    id: 6,
-    content: "【営業時間変更】12月は22時まで営業いたします。",
-    timestamp: "1週間前",
-    isPinned: true,
-  },
-];
+  const pinnedPostRes = await fetch(
+    `http://backend:3000/api/moderator/announcements`,
+    {
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+        Cookie: `moderator_jwt=${cookieHeader}`,
+      },
+    }
+  );
+  if (!pinnedPostRes.ok) return notFound();
+  const pinnedPosts = await pinnedPostRes.json();
 
-export default function ModeratorPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -108,7 +71,7 @@ export default function ModeratorPage() {
           </div>
           <div className="flex items-center gap-2">
             <Badge className="bg-orange-500 text-white">店舗運営者</Badge>
-            <LogoutDialog redirectUrl="/moderator/login" />
+            <LogoutDialog />
           </div>
         </div>
       </div>
@@ -123,7 +86,7 @@ export default function ModeratorPage() {
               value="reports"
               className="data-[state=active]:bg-gray-500 data-[state=active]:text-white"
             >
-              違反報告
+              通報管理
             </TabsTrigger>
             <TabsTrigger
               value="posts"

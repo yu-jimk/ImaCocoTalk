@@ -75,3 +75,5 @@ coverage/
 *.pem
 *.key
 *.crt
+
+cookie.txt

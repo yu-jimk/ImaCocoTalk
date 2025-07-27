@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, use } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +18,12 @@ import Form from "next/form";
 import { StarRating } from "@/components/StarRating";
 import { createPostAction } from "./actions";
 
-export default function CreatePostPage() {
+export default function CreatePostPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = use(params);
   const [rating, setRating] = useState(0);
 
   return (
@@ -27,7 +32,7 @@ export default function CreatePostPage() {
       <div className="bg-white border-b border-blue-200 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Link href="/stores/1">
+            <Link href={`/stores/${id}`}>
               <Button
                 variant="ghost"
                 size="icon"
@@ -81,6 +86,7 @@ export default function CreatePostPage() {
           <CardContent className="p-6">
             <Form action={createPostAction} className="space-y-6">
               <input type="hidden" name="rating" value={rating} />
+              <input type="hidden" name="store_id" value={id} />
 
               {/* Rating Section */}
               <div className="space-y-3">

@@ -1,28 +1,50 @@
 class StoresController < BaseController
-  before_action :set_store, only: %i[ show update destroy ]
+  before_action :set_store, only: %i[ show update posts]
 
-  # GET /stores
-  # def index
-  #   @stores = Store.all
+  def nearby
+    lat = params[:lat].to_f
+    lng = params[:lng].to_f
+    radius = params[:radius] ? params[:radius].to_f : 5
 
-  #   render json: @stores
-  # end
+    @stores = Store.near([lat, lng], radius, units: :km)
+    @stores_with_distance = @stores.map do |store|
+      distance_km = Geocoder::Calculations.distance_between([lat, lng], [store.latitude, store.longitude])
+      store.define_singleton_method(:distance_m) { (distance_km * 1000).round }
+      store
+    end.sort_by(&:distance_m)
+
+    # ユニークなジャンル配列
+    @available_genres = @stores_with_distance.map(&:place_types).flatten.uniq
+
+    render "stores/nearby"
+  end
 
   # GET /stores/1
   def show
-    render json: @store
+    @is_favorited = current_user&.favorited?(@store) || false
+
+    lat = params[:lat].to_f
+    lng = params[:lng].to_f
+    distance_km = Geocoder::Calculations.distance_between(
+      [lat, lng],
+      [@store.latitude, @store.longitude]
+    )
+    @distance_m = (distance_km * 1000).round
   end
 
-  # POST /stores
-  # def create
-  #   @store = Store.new(store_params)
+  def posts
+    page = params[:page].to_i > 0 ? params[:page].to_i : 1
+    limit = params[:limit].to_i > 0 ? params[:limit].to_i : 20
+    offset = (page - 1) * limit
 
-  #   if @store.save
-  #     render json: @store, status: :created, location: @store
-  #   else
-  #     render json: @store.errors, status: :unprocessable_entity
-  #   end
-  # end
+    @current_user = current_user
+    @posts = @store.posts.includes(:user, :likes).order(created_at: :desc).offset(offset).limit(limit)
+    @total_count = @store.posts.count
+
+  rescue ActiveRecord::RecordNotFound
+    render json: { error: "Store not found" }, status: :not_found
+  end
+  
 
   # PATCH/PUT /stores/1
   def update
@@ -32,11 +54,6 @@ class StoresController < BaseController
       render json: @store.errors, status: :unprocessable_entity
     end
   end
-
-  # DELETE /stores/1
-  # def destroy
-  #   @store.destroy!
-  # end
 
   private
     # Use callbacks to share common setup or constraints between actions.

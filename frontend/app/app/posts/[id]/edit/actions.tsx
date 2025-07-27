@@ -1,22 +1,39 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
 export async function editPostAction(formData: FormData) {
-  const content = formData.get("content") as string;
-  const rating = formData.get("rating") as string;
+  const id = String(formData.get("id"));
+  const rating = Number(formData.get("rating"));
+  const content = String(formData.get("content"));
+
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("user_jwt")?.value;
 
   // バリデーション
-  if (!content.trim() || !rating || Number.parseFloat(rating) === 0) {
+  if (!content.trim() || !rating || rating === 0) {
     console.error("投稿内容と評価は必須です");
     return;
   }
 
-  // 投稿処理をシミュレート
-  await new Promise((resolve) => setTimeout(resolve, 1000));
+  const res = await fetch(`http://backend:3000/api/posts/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `user_jwt=${cookieHeader}`,
+    },
+    body: JSON.stringify({
+      rating: rating,
+      content,
+    }),
+  });
 
-  console.log("Edit post:", { content, rating: Number.parseFloat(rating) });
+  if (!res.ok) {
+    console.error("投稿編集に失敗しました", await res.text());
+    return;
+  }
 
-  // 成功時は店舗詳細ページにリダイレクト
   redirect("/me");
 }

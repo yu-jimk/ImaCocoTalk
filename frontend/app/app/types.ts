@@ -1,5 +1,5 @@
 export type StoreData = {
-  id: number;
+  id: string;
   name: string;
   genres: string[];
   address: string;
@@ -16,7 +16,7 @@ export type StoreData = {
 };
 
 export type Post = {
-  id: number;
+  id: string;
   user: { name: string; avatar: string };
   content: string;
   timestamp: string;
@@ -30,7 +30,8 @@ export type Post = {
 };
 
 export type StoreMyPage = {
-  id: number;
+  id: string;
+  store_id: string;
   name: string;
   genre: string;
   date?: string;

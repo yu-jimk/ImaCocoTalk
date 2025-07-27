@@ -11,11 +11,13 @@ import type { Post } from "@/app/types";
 import { PostCard } from "@/components/PostCard";
 
 export function AllPosts({
+  totalCount,
   posts,
   currentPage,
   totalPages,
   storeId,
 }: {
+  totalCount: number;
   posts: Post[];
   currentPage: number;
   totalPages: number;
@@ -34,7 +36,7 @@ export function AllPosts({
             投稿一覧
           </h3>
           <Badge className="bg-blue-600 text-white text-xs sm:text-sm">
-            {posts.length}件の投稿
+            {totalCount}件の投稿
           </Badge>
         </div>
 

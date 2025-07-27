@@ -1,13 +1,50 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Shield } from "lucide-react";
 import Link from "next/link";
-import Form from "next/form";
-import { moderatorLoginAction } from "./actions";
 
 export default function ModeratorLoginPage() {
+  const router = useRouter();
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const res = await fetch("http://localhost:3000/api/moderator/auth/login", {
+      method: "POST",
+      body: JSON.stringify({
+        email: formData.get("email"),
+        password: formData.get("password"),
+      }),
+      headers: { "Content-Type": "application/json" },
+      credentials: "include",
+    });
+    if (!res.ok) {
+      alert("ログイン失敗");
+      return;
+    }
+    router.push("/moderator/dashboard");
+  }
+
+  async function handleGuestLogin() {
+    const res = await fetch(
+      "http://localhost:3000/api/moderator/auth/guest_login",
+      {
+        method: "POST",
+        credentials: "include",
+      }
+    );
+    if (!res.ok) {
+      alert("ゲストログイン失敗");
+      return;
+    }
+    router.push("/moderator/dashboard");
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <Card className="w-full max-w-md py-6">
@@ -23,7 +60,7 @@ export default function ModeratorLoginPage() {
           <p className="text-gray-600 text-sm">店舗運営者専用ページ</p>
         </CardHeader>
         <CardContent className="space-y-4">
-          <Form action={moderatorLoginAction} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email">メールアドレス</Label>
               <Input
@@ -50,7 +87,7 @@ export default function ModeratorLoginPage() {
             >
               ログイン
             </Button>
-          </Form>
+          </form>
 
           <div className="text-center space-y-2">
             <Link
@@ -62,11 +99,13 @@ export default function ModeratorLoginPage() {
           </div>
 
           <div className="pt-4 border-t">
-            <Link href="/moderator/dashboard">
-              <Button variant="outline" className="w-full bg-transparent">
-                ゲストログイン
-              </Button>
-            </Link>
+            <Button
+              onClick={handleGuestLogin}
+              variant="outline"
+              className="w-full bg-transparent"
+            >
+              ゲストログイン
+            </Button>
           </div>
         </CardContent>
       </Card>

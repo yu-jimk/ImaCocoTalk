@@ -71,7 +71,7 @@ export function StoreInfo({ store }: { store: StoreData }) {
           </div>
         </div>
       </div>
-      <Link href="/checkin">
+      <Link href={`/stores/${store.id}/checkin`}>
         <Button
           className="w-full mb-2 bg-blue-600 hover:bg-blue-700"
           variant="default"

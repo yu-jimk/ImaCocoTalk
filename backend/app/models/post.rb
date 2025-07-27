@@ -10,4 +10,29 @@ class Post < ApplicationRecord
 
   has_many :likes, dependent: :destroy
   has_many :liked_users, through: :likes, source: :user
+  has_many :reports, dependent: :destroy
+
+  # いいね数
+  def likes_count
+    likes.size
+  end
+
+  # 評価（rating）はDBカラムとして保存されている想定
+  def rating
+    read_attribute(:rating) || 0.0
+  end
+
+  # ログインユーザーがいいね済みか判定用（引数にユーザー渡す形が理想）
+  def liked_by?(user)
+    return false if user.nil?
+    likes.exists?(user_id: user.id)
+  end
+
+  def report_reasons
+    reports.pluck(:reason).uniq
+  end
+
+  def reports_count
+    reports.count
+  end
 end

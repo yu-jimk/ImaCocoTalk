@@ -8,65 +8,56 @@ import Link from "next/link";
 import Form from "next/form";
 import { addCommentAction } from "./actions";
 import { PostCard } from "@/components/PostCard";
-// import { notFound } from "next/navigation";
+import { notFound } from "next/navigation";
 import { Post } from "@/app/types";
-
-// Mock data
-const post: Post = {
-  id: 1,
-  user: { name: "田中太郎", avatar: "" },
-  content:
-    "コーヒーがとても美味しかったです！雰囲気も良くて、仕事にも集中できました。WiFiも快適で電源もあるので、ノマドワークにもおすすめです。",
-  timestamp: "2時間前",
-  likes: 12,
-  isLiked: false,
-  rating: 5,
-  store: { name: "カフェ・ド・パリ" },
-  comments: 0,
-};
+import { cookies } from "next/headers";
 
 const comments = [
   {
     id: 1,
     user: { name: "佐藤花子", avatar: "" },
-    content: "私もここのコーヒー大好きです！",
+    content: "コメント機能は実装中...",
     timestamp: "1時間前",
   },
   {
     id: 2,
     user: { name: "山田次郎", avatar: "" },
-    content: "WiFi情報ありがとうございます。今度利用してみます。",
+    content: "あったら便利ですね！",
     timestamp: "30分前",
   },
 ];
 
-export default async function PostDetailPage({}: //   params,
-{
+export default async function PostDetailPage({
+  params,
+}: {
   params: Promise<{ id: string }>;
 }) {
-  //   const postId = (await params).id;
-  //   const postRes = await fetch(
-  //     `${process.env.NEXT_PUBLIC_API_URL}/posts/${postId}`,
-  //     {
-  //       next: { revalidate: 3600 },
-  //     }
-  //   );
-  //   if (!postRes.ok) return notFound();
-  //   const post1: Post = await postRes.json();
+  const postId = (await params).id;
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore.get("user_jwt")?.value;
+  const postRes = await fetch(`http://backend:3000/api/posts/${postId}`, {
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+      Cookie: `user_jwt=${cookieHeader}`,
+    },
+  });
+  if (!postRes.ok) return notFound();
+  const post: Post = await postRes.json();
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-white border-b px-4 py-3">
+      <header className="bg-white border-b px-4 py-3">
         <div className="flex items-center gap-3">
-          <Link href="/stores/1">
+          <Link href="/stores/20">
             <Button variant="ghost" size="icon">
               <ArrowLeft className="h-5 w-5" />
             </Button>
           </Link>
           <h1 className="text-lg font-semibold">投稿詳細</h1>
         </div>
-      </div>
+      </header>
 
       <div className="p-4 space-y-4">
         {/* Main Post */}
