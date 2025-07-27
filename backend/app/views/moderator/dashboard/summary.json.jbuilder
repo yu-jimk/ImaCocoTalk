@@ -11,3 +11,4 @@
   json.totalReports @total_reports
   json.monthlyVisitors @monthly_visitors
   json.qrCodeValue @qr_code_value
+  json.averageRating @average_rating

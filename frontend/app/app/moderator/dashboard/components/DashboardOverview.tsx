@@ -19,6 +19,7 @@ export type StoreInfo = {
   totalPosts: number;
   totalReports: number;
   monthlyVisitors: number;
+  averageRating: number;
 };
 
 export function DashboardOverview({ storeInfo }: { storeInfo: StoreInfo }) {
@@ -74,7 +75,7 @@ export function DashboardOverview({ storeInfo }: { storeInfo: StoreInfo }) {
                   </div>
                   <div className="text-xs sm:text-sm text-red-600 flex items-center justify-center gap-1 mt-2">
                     <Flag className="h-3 w-3" />
-                    違反報告
+                    総通報数
                   </div>
                 </div>
                 <div className="text-center p-3 sm:p-4 md:p-6 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
@@ -88,7 +89,7 @@ export function DashboardOverview({ storeInfo }: { storeInfo: StoreInfo }) {
                 </div>
                 <div className="text-center p-3 sm:p-4 md:p-6 bg-gray-50 rounded-lg flex flex-col items-center justify-center">
                   <div className="text-lg sm:text-xl md:text-2xl font-bold text-purple-600">
-                    4.5
+                    {storeInfo.averageRating}
                   </div>
                   <div className="text-xs sm:text-sm text-purple-600 flex items-center justify-center gap-1 mt-2">
                     <TrendingUp className="h-3 w-3" />
