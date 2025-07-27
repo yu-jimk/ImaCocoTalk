@@ -25,7 +25,7 @@ class AuthController < BaseController
   end
 
   def guest_login
-    user = User.find_by(email: 't-yamada@example.com')
+    user = User.order(:id).first
 
     unless user
       render json: { error: 'ゲストユーザーが存在しません' }, status: :not_found and return
