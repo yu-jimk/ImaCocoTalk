@@ -86,7 +86,7 @@ export default async function ModeratorPage() {
               value="reports"
               className="data-[state=active]:bg-gray-500 data-[state=active]:text-white"
             >
-              違反報告
+              通報管理
             </TabsTrigger>
             <TabsTrigger
               value="posts"

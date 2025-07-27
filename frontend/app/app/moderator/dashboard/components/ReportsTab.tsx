@@ -3,7 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle, Trash2, Eye, Clock } from "lucide-react";
+import { Flag, Trash2, Eye, Clock } from "lucide-react";
 import { StarRating } from "@/components/StarRating";
 import { deleteReportedPostAction, approveReportedPostAction } from "./actions";
 
@@ -38,8 +38,8 @@ export async function ReportsTab({ reportedPosts }: ReportsTabProps) {
   return (
     <TabsContent value="reports" className="space-y-4">
       <div className="flex items-center gap-2 mb-4">
-        <AlertTriangle className="h-5 w-5 text-red-500" />
-        <h2 className="font-semibold text-red-700">違反報告された投稿</h2>
+        <Flag className="h-5 w-5 text-red-500" />
+        <h2 className="font-semibold text-red-700">通報された投稿</h2>
         <Badge variant="destructive">{reportedPosts.length}</Badge>
       </div>
       {reportedPosts.map((post) => (
@@ -108,6 +108,17 @@ export async function ReportsTab({ reportedPosts }: ReportsTabProps) {
           </CardContent>
         </Card>
       ))}
+      {reportedPosts.length === 0 && (
+        <Card>
+          <CardContent className="p-8 text-center">
+            <Flag className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+            <p className="text-gray-500">通報された投稿がありません</p>
+            <p className="text-sm text-gray-400 mt-1">
+              ユーザーからの通報がここに表示されます
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </TabsContent>
   );
 }
