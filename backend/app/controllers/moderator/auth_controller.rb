@@ -13,7 +13,7 @@ class Moderator::AuthController < Moderator::BaseController
   end
 
   def guest_login
-    moderator = Moderator.find_by(email: 't-yamada@example.com')
+    moderator = Moderator.order(:id).first
 
     unless moderator
       render json: { error: 'ゲストユーザーが存在しません' }, status: :not_found and return
