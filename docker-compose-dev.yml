@@ -42,6 +42,7 @@ services:
     volumes:
       # ./frontend/appの内容をコンテナ内の/usr/src/appにマウントする
       - ./frontend/app:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - ${NEXTJS_PORT}:3000 # 環境変数（.env）から参照
 volumes:
